@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FHT — Plan Prospector v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f1923;--ink-2:#2d3a4a;--ink-3:#5a6a7e;--ink-4:#8a98a8;
+  --border:#dde3eb;--border-2:#eaeff5;--bg:#f5f7fa;--surface:#fff;
+  --blue:#1565e8;--blue-lt:#eff3fd;
+  --green:#0d7a4e;--green-lt:#edf6f1;
+  --amber:#92530c;--amber-lt:#fef6ee;
+  --red:#b91c1c;--red-lt:#fef2f2;
+  --radius:8px;
+  --shadow:0 1px 3px rgba(15,25,35,.06),0 1px 2px rgba(15,25,35,.04);
+  --shadow-md:0 4px 20px rgba(15,25,35,.09);
+  --shadow-lg:0 8px 40px rgba(15,25,35,.13);
+}
+body{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+
+/* NAV */
+.topnav{background:#fff;border-bottom:1px solid var(--border);height:56px;padding:0 40px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.logo-mark{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{fill:white;width:14px;height:14px;}
+.logo-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);line-height:1.1;}
+.logo-sub{font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.6px;}
+.nav-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+.nav-links{display:flex;gap:2px;}
+.nav-link{background:none;border:none;padding:6px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.nav-link:hover{background:var(--bg);color:var(--ink);}
+.nav-link.active{background:var(--blue-lt);color:var(--blue);font-weight:600;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.user-pill{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border:1px solid var(--border);border-radius:20px;}
+.user-av{width:26px;height:26px;background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;}
+.user-name{font-size:12.5px;font-weight:500;color:var(--ink-2);}
+
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:32px 40px 80px;}
+
+/* PAGE HEADER */
+.page-hdr{margin-bottom:24px;}
+.page-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-4);margin-bottom:6px;}
+.page-title{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.page-sub{font-size:13.5px;color:var(--ink-3);max-width:560px;line-height:1.6;}
+
+/* FILTER BAR */
+.filter-bar{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin-bottom:20px;box-shadow:var(--shadow);}
+.filter-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:12px;align-items:end;}
+.filter-group{display:flex;flex-direction:column;gap:5px;}
+.filter-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);}
+.filter-input{background:var(--bg);border:1.5px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .12s;}
+.filter-input:focus{border-color:var(--blue);background:#fff;}
+.filter-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%238a98a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+
+/* SIGNALS ROW */
+.signals-row{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border-2);flex-wrap:wrap;}
+.signals-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);flex-shrink:0;margin-right:4px;}
+.signal-chip{display:flex;align-items:center;gap:6px;padding:5px 12px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;font-size:12px;font-weight:500;color:var(--ink-3);background:#fff;transition:all .1s;user-select:none;}
+.signal-chip:hover{border-color:var(--ink-3);color:var(--ink-2);}
+.signal-chip.on{border-color:var(--blue);background:var(--blue-lt);color:var(--blue);}
+.signal-chip-dot{width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .1s;}
+.signal-chip.on .signal-chip-dot{background:var(--blue);}
+
+/* SCAN BUTTON */
+.scan-btn{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:opacity .12s;height:38px;}
+.scan-btn:hover{opacity:.9;}
+
+/* RESULTS AREA */
+.results-area{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.results-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg);}
+.results-hdr-title{font-size:13px;font-weight:600;color:var(--ink);}
+.results-hdr-sub{font-size:12.5px;color:var(--ink-4);margin-top:1px;}
+.results-count-badge{font-size:11.5px;font-weight:600;color:var(--ink-3);background:var(--border-2);padding:3px 10px;border-radius:20px;}
+
+/* TABLE */
+.results-table{width:100%;border-collapse:collapse;}
+.results-table th{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);padding:10px 18px;border-bottom:1px solid var(--border);text-align:left;background:var(--bg);white-space:nowrap;}
+.results-table th.num{text-align:right;}
+.results-table td{padding:12px 18px;border-bottom:1px solid var(--border-2);font-size:13px;color:var(--ink-3);vertical-align:middle;}
+.results-table tr:last-child td{border-bottom:none;}
+.results-table tbody tr{cursor:pointer;transition:background .1s;}
+.results-table tbody tr:hover{background:var(--bg);}
+.results-table tbody tr.selected{background:var(--blue-lt);}
+.results-table tbody tr.selected td{color:var(--ink-2);}
+.results-table tbody tr.selected .plan-name-cell{color:var(--blue);}
+
+.plan-name-cell{font-weight:600;color:var(--ink-2);line-height:1.3;}
+.plan-type-cell{font-size:12px;}
+.num-cell{text-align:right;font-weight:600;color:var(--ink-2);}
+.fee-cell{text-align:right;}
+.fee-high{font-weight:600;color:var(--ink-2);}
+.signal-dots{display:flex;gap:4px;flex-wrap:wrap;}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;}
+.sdot.on{background:var(--blue);}
+
+.score-cell{text-align:center;}
+.score-badge{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;font-size:13px;font-weight:700;border:1.5px solid var(--border);color:var(--ink-3);background:var(--bg);}
+.score-badge.top{border-color:var(--blue);color:var(--blue);background:var(--blue-lt);}
+
+/* EMPTY STATE */
+.table-empty{padding:64px 20px;text-align:center;}
+.table-empty-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px;}
+.table-empty-sub{font-size:13px;color:var(--ink-4);max-width:340px;margin:0 auto;line-height:1.65;}
+
+/* LOADING OVERLAY */
+.scan-overlay{position:fixed;inset:0;background:rgba(245,247,250,.94);display:flex;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(4px);}
+.scan-overlay.hidden{display:none;}
+.scan-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:44px 52px;text-align:center;width:400px;box-shadow:var(--shadow-lg);}
+.scan-spinner{width:36px;height:36px;border:3px solid var(--border-2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 20px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.scan-sub{font-size:13px;color:var(--ink-4);margin-bottom:22px;}
+.scan-track{height:2px;background:var(--border-2);border-radius:1px;overflow:hidden;margin-bottom:8px;}
+.scan-fill{height:100%;background:var(--blue);border-radius:1px;transition:width .35s ease;}
+.scan-step-txt{font-size:12px;color:var(--ink-4);min-height:16px;}
+
+/* DETAIL DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(15,25,35,.25);z-index:400;opacity:0;pointer-events:none;transition:opacity .2s;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:580px;background:#fff;box-shadow:var(--shadow-lg);z-index:500;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.drawer-hdr{padding:20px 28px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.drawer-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-left:12px;transition:all .12s;}
+.drawer-close:hover{background:var(--bg);border-color:var(--ink-3);}
+.drawer-close svg{fill:none;stroke:var(--ink-3);stroke-width:2;stroke-linecap:round;width:12px;height:12px;}
+.drawer-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);margin-bottom:4px;}
+.drawer-plan-name{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:3px;}
+.drawer-plan-meta{font-size:12.5px;color:var(--ink-4);}
+.drawer-body{flex:1;overflow-y:auto;padding:22px 28px;}
+.drawer-footer{padding:14px 28px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;background:#fff;}
+
+/* Drawer sections */
+.drawer-sec{margin-bottom:22px;}
+.drawer-sec-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.drawer-sec-label::after{content:'';flex:1;height:1px;background:var(--border-2);}
+
+/* Stats row */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.stat-card{background:var(--bg);border-radius:6px;padding:10px 12px;}
+.stat-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);margin-bottom:4px;}
+.stat-val{font-size:17px;font-weight:700;color:var(--ink-2);font-family:'Fraunces',serif;}
+.stat-note{font-size:10.5px;color:var(--ink-4);margin-top:2px;}
+
+/* Signal rows */
+.signal-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--border-2);align-items:flex-start;}
+.signal-row:last-child{border-bottom:none;}
+.signal-icon{width:26px;height:26px;border-radius:5px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.signal-icon svg{fill:none;stroke:var(--ink-3);stroke-width:1.5;stroke-linecap:round;width:13px;height:13px;}
+.signal-name{font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:2px;}
+.signal-desc{font-size:12.5px;color:var(--ink-3);line-height:1.55;}
+.signal-impact{font-size:11.5px;font-weight:600;color:var(--blue);margin-top:4px;}
+
+/* Outreach */
+.outreach-section{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.oe-hdr{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.oe-title{font-size:12px;font-weight:600;color:var(--ink-2);}
+.oe-subject{font-size:12px;color:var(--ink-4);padding:10px 16px;border-bottom:1px solid var(--border-2);}
+.oe-subject strong{color:var(--ink-3);}
+.oe-body{padding:14px 16px;font-size:13px;color:var(--ink-2);line-height:1.8;white-space:pre-wrap;}
+.copy-btn{font-size:12px;font-weight:500;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:3px 8px;border-radius:4px;}
+.copy-btn:hover{background:var(--blue-lt);}
+
+/* Approach */
+.approach-text{font-size:13px;color:var(--ink-3);line-height:1.8;white-space:pre-wrap;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;padding:8px 18px;transition:all .12s;}
+.btn-primary{background:var(--blue);color:#fff;}.btn-primary:hover{background:#1254c5;}
+.btn-secondary{background:#fff;color:var(--ink-2);border:1px solid var(--border);}.btn-secondary:hover{border-color:var(--ink-3);}
+.btn-sm{padding:6px 14px;font-size:12px;}
+
+/* Toast */
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;z-index:999;transition:opacity .2s;white-space:nowrap;box-shadow:var(--shadow-md);}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- LOADING -->
+<div class="scan-overlay hidden" id="scanOverlay">
+  <div class="scan-box">
+    <div class="scan-spinner"></div>
+    <div class="scan-title">Scanning Form 5500 Database</div>
+    <div class="scan-sub">Querying DOL EFAST2 public filings</div>
+    <div class="scan-track"><div class="scan-fill" id="scan-fill" style="width:0%"></div></div>
+    <div class="scan-step-txt" id="scan-step"></div>
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hdr">
+    <div>
+      <div class="drawer-eyebrow">Plan Intelligence</div>
+      <div class="drawer-plan-name" id="d-name">—</div>
+      <div class="drawer-plan-meta" id="d-meta">—</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()"><svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-footer">
+    <button class="btn btn-primary btn-sm" onclick="generateReportCard()">Generate Report Card</button>
+    <button class="btn btn-secondary btn-sm" onclick="copyEmail()">Copy outreach email</button>
+    <button class="btn btn-secondary btn-sm" onclick="toast('Added to pipeline')">Add to pipeline</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a class="logo" href="#">
+    <div class="logo-mark"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v8l7 4 7-4V6L10 2zm0 2.3l5 2.8v6.4l-5 2.8-5-2.8V7.1l5-2.8z"/></svg></div>
+    <div><div class="logo-name">First Hill Trust</div><div class="logo-sub">Retirement Services</div></div>
+  </a>
+  <div class="nav-sep"></div>
+  <div class="nav-links">
+    <button class="nav-link">Dashboard</button>
+    <button class="nav-link">Retirement Plan Gap Analysis</button>
+    <button class="nav-link active">Plan Prospector</button>
+    <button class="nav-link">BD Engine</button>
+  </div>
+  <div class="nav-right">
+    <div class="user-pill">
+      <div class="user-av">RD</div>
+      <div class="user-name">Robert Delgado</div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-hdr">
+    <div class="page-eyebrow">Business Development</div>
+    <div class="page-title">Plan Prospector</div>
+    <div class="page-sub">Search public Form 5500 filings to find retirement plans worth approaching. Set your filters, scan the database, and click any result for the full plan intelligence and outreach.</div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <div class="filter-row">
+      <div class="filter-group">
+        <div class="filter-label">State</div>
+        <select class="filter-input filter-select" id="f-state">
+          <option>California</option><option>Washington</option><option>Oregon</option>
+          <option>Texas</option><option>New York</option><option>Florida</option>
+          <option>All states</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Industry</div>
+        <select class="filter-input filter-select" id="f-industry">
+          <option value="">Any industry</option>
+          <option>Manufacturing</option><option>Healthcare</option><option>Construction</option>
+          <option>Professional Services</option><option>Retail Trade</option><option>Education</option>
+          <option>Hospitality</option><option>Technology</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Plan type</div>
+        <select class="filter-input filter-select" id="f-type">
+          <option value="">401(k) and 403(b)</option>
+          <option>401(k) only</option><option>403(b) only</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Min assets</div>
+        <select class="filter-input filter-select" id="f-min">
+          <option value="5">$5M</option><option value="10" selected>$10M</option>
+          <option value="25">$25M</option><option value="50">$50M</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Max assets</div>
+        <select class="filter-input filter-select" id="f-max">
+          <option value="50">$50M</option><option value="100" selected>$100M</option>
+          <option value="250">$250M</option><option value="999">No limit</option>
+        </select>
+      </div>
+      <button class="scan-btn" onclick="runScan()">Scan database</button>
+    </div>
+
+    <!-- SIGNALS -->
+    <div class="signals-row">
+      <div class="signals-label">Signals</div>
+      <div class="signal-chip on" onclick="toggleChip(this)" data-key="highFee"><div class="signal-chip-dot"></div>High fees</div>
+      <div class="signal-chip on" onclick="toggleChip(this)" data-key="bankAdvisor"><div class="signal-chip-dot"></div>Bank / wirehouse advisor</div>
+      <div class="signal-chip on" onclick="toggleChip(this)" data-key="noAdvisor"><div class="signal-chip-dot"></div>No advisor on record</div>
+      <div class="signal-chip on" onclick="toggleChip(this)" data-key="lowParticipation"><div class="signal-chip-dot"></div>Low participation</div>
+      <div class="signal-chip on" onclick="toggleChip(this)" data-key="lateAmended"><div class="signal-chip-dot"></div>Late or amended filing</div>
+      <div class="signal-chip" onclick="toggleChip(this)" data-key="noMatch"><div class="signal-chip-dot"></div>No employer match</div>
+    </div>
+  </div>
+
+  <!-- RESULTS TABLE -->
+  <div class="results-area">
+    <div class="results-hdr">
+      <div>
+        <div class="results-hdr-title" id="tbl-title">Results</div>
+        <div class="results-hdr-sub">Set filters above and scan to find target plans</div>
+      </div>
+      <div class="results-count-badge" id="tbl-count" style="display:none;"></div>
+    </div>
+    <div id="table-wrap">
+      <div class="table-empty">
+        <div class="table-empty-title">No results yet</div>
+        <div class="table-empty-sub">Set your search filters above and click Scan to surface target plans from public Form 5500 filings.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const planDatabase = [
+  {id:1,name:'Bay Area Precision Manufacturing',city:'Fremont, CA',state:'California',industry:'Manufacturing',type:'401(k)',assets:24200000,participants:312,advisor:'Wells Fargo Bank Trust Services',rk:'Empower Retirement',allInFee:0.94,peerFee:0.61,participationRate:71,matchFormula:'None',filingStatus:'On time',planYear:'2023',ein:'82-4421003',flags:['highFee','bankAdvisor','lowParticipation'],score:91},
+  {id:2,name:'Tri-Valley Health Partners',city:'Pleasanton, CA',state:'California',industry:'Healthcare',type:'403(b)',assets:31800000,participants:680,advisor:'Merrill Lynch Wealth Management',rk:'Transamerica',allInFee:0.88,peerFee:0.65,participationRate:74,matchFormula:'3% of salary',filingStatus:'Amended',planYear:'2023',ein:'94-3312088',flags:['highFee','bankAdvisor','lateAmended'],score:89},
+  {id:3,name:'Sunrise Unified School District',city:'Livermore, CA',state:'California',industry:'Education',type:'403(b)',assets:18400000,participants:412,advisor:'None found',rk:'Unknown',allInFee:1.12,peerFee:0.64,participationRate:68,matchFormula:'None',filingStatus:'On time',planYear:'2023',ein:'68-0044219',flags:['highFee','noAdvisor','lowParticipation','noMatch'],score:88},
+  {id:4,name:'Pacific Rim Logistics Group',city:'Oakland, CA',state:'California',industry:'Manufacturing',type:'401(k)',assets:22600000,participants:445,advisor:'U.S. Bank Institutional Trust',rk:'Fidelity',allInFee:0.79,peerFee:0.58,participationRate:76,matchFormula:'50% up to 4%',filingStatus:'Late — 3 months',planYear:'2023',ein:'94-7723401',flags:['highFee','bankAdvisor','lateAmended'],score:82},
+  {id:5,name:'Golden Gate Hospitality Group',city:'San Francisco, CA',state:'California',industry:'Hospitality',type:'401(k)',assets:14700000,participants:890,advisor:'None found',rk:'Principal Financial',allInFee:1.24,peerFee:0.71,participationRate:54,matchFormula:'None',filingStatus:'On time',planYear:'2023',ein:'94-1182334',flags:['highFee','noAdvisor','lowParticipation','noMatch'],score:86},
+  {id:6,name:'Summit Engineering Partners',city:'San Jose, CA',state:'California',industry:'Professional Services',type:'401(k)',assets:38100000,participants:228,advisor:'Morgan Stanley Smith Barney',rk:'Schwab',allInFee:0.72,peerFee:0.55,participationRate:88,matchFormula:'100% up to 4%',filingStatus:'On time',planYear:'2023',ein:'77-0938421',flags:['highFee','bankAdvisor'],score:74},
+  {id:7,name:'East Bay Construction Collective',city:'Hayward, CA',state:'California',industry:'Construction',type:'401(k)',assets:16900000,participants:334,advisor:'JPMorgan Chase Bank N.A.',rk:'Empower Retirement',allInFee:0.98,peerFee:0.62,participationRate:69,matchFormula:'2% of salary',filingStatus:'Amended',planYear:'2023',ein:'94-2218843',flags:['highFee','bankAdvisor','lowParticipation','lateAmended'],score:87},
+  {id:8,name:'Redwood City Tech Ventures',city:'Redwood City, CA',state:'California',industry:'Technology',type:'401(k)',assets:11200000,participants:156,advisor:'None found',rk:'Guideline',allInFee:0.88,peerFee:0.52,participationRate:92,matchFormula:'100% up to 6%',filingStatus:'On time',planYear:'2023',ein:'47-3312091',flags:['highFee','noAdvisor'],score:71},
+  {id:9,name:'North Bay Medical Associates',city:'Santa Rosa, CA',state:'California',industry:'Healthcare',type:'401(k)',assets:42800000,participants:312,advisor:'Bank of America Merrill Lynch',rk:'Vanguard',allInFee:0.67,peerFee:0.58,participationRate:82,matchFormula:'50% up to 6%',filingStatus:'On time',planYear:'2023',ein:'94-0093412',flags:['highFee','bankAdvisor'],score:68},
+  {id:10,name:'Central Valley Foods Inc.',city:'Stockton, CA',state:'California',industry:'Manufacturing',type:'401(k)',assets:19300000,participants:521,advisor:'None found',rk:'Transamerica',allInFee:1.08,peerFee:0.63,participationRate:62,matchFormula:'None',filingStatus:'Late — 5 months',planYear:'2023',ein:'94-8811203',flags:['highFee','noAdvisor','lowParticipation','noMatch','lateAmended'],score:93},
+];
+
+const activeSignals = new Set(['highFee','bankAdvisor','noAdvisor','lowParticipation','lateAmended']);
+let selectedPlan = null;
+let currentResults = [];
+
+function toggleChip(el){
+  const key = el.dataset.key;
+  el.classList.toggle('on');
+  el.querySelector('.signal-chip-dot').style.background = el.classList.contains('on') ? 'var(--blue)' : 'var(--border)';
+  if(el.classList.contains('on')) activeSignals.add(key);
+  else activeSignals.delete(key);
+}
+
+function fmtM(n){return n>=1000000?'$'+(n/1000000).toFixed(1)+'M':'$'+(n/1000).toFixed(0)+'K';}
+function fmt(n){return Math.round(n).toLocaleString();}
+
+async function runScan(){
+  document.getElementById('scanOverlay').classList.remove('hidden');
+
+  const state = document.getElementById('f-state').value;
+  const industry = document.getElementById('f-industry').value;
+  const planType = document.getElementById('f-type').value;
+  const minAssets = parseInt(document.getElementById('f-min').value) * 1000000;
+  const maxAssets = parseInt(document.getElementById('f-max').value) * 1000000;
+
+  const steps = [
+    'Connecting to DOL EFAST2 filing system...',
+    'Querying Form 5500 filings...',
+    'Filtering by plan size and state...',
+    'Analyzing advisor and fee data...',
+    'Calculating winnability scores...'
+  ];
+  let i = 0;
+  const fill = document.getElementById('scan-fill');
+  const step = document.getElementById('scan-step');
+  const ticker = setInterval(()=>{
+    if(i < steps.length){ step.textContent = steps[i]; fill.style.width = ((i+1)/steps.length*60)+'%'; i++; }
+  }, 400);
+
+  // Build EFAST2 query
+  // State abbreviation mapping
+  const stateMap = {
+    'California':'CA','Washington':'WA','Oregon':'OR','Texas':'TX',
+    'New York':'NY','Florida':'FL','Illinois':'IL','Pennsylvania':'PA',
+    'Ohio':'OH','All states':''
+  };
+  const stateCode = stateMap[state] || '';
+
+  // Build query string — search for any plan (wildcard), filtered by state/size
+  const params = new URLSearchParams({
+    query: industry || '*',
+    size: '25',
+    from: '0',
+  });
+  if(stateCode) params.append('State', stateCode);
+  if(minAssets) params.append('AssetFrom', minAssets.toString());
+  if(maxAssets < 999000000) params.append('AssetTo', maxAssets.toString());
+
+  // Filter by plan type
+  if(planType === '401(k) only') params.append('PlanType', 'DC');
+  else if(planType === '403(b) only') params.append('PlanType', 'WF');
+
+  const url = `https://efts.dol.gov/EFTS-Public/search?${params.toString()}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    clearInterval(ticker);
+    fill.style.width = '100%';
+    step.textContent = 'Processing results...';
+
+    setTimeout(()=>{
+      document.getElementById('scanOverlay').classList.add('hidden');
+      const plans = parseEFAST2Results(data);
+      currentResults = scorePlans(plans).sort((a,b)=>b.score-a.score);
+      renderTable(currentResults);
+    }, 400);
+
+  } catch(err) {
+    clearInterval(ticker);
+    document.getElementById('scanOverlay').classList.add('hidden');
+
+    // CORS or network error — fall back to demo data with a notice
+    if(err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.name === 'TypeError'){
+      showCORSNotice();
+      // Still show demo data so the tool is usable
+      currentResults = planDatabase.filter(p => p.flags.some(f => activeSignals.has(f))).sort((a,b)=>b.score-a.score);
+      renderTable(currentResults);
+    } else {
+      document.getElementById('table-wrap').innerHTML = `<div class="table-empty"><div class="table-empty-title">Search error</div><div class="table-empty-sub">${err.message}. Please try again.</div></div>`;
+    }
+  }
+}
+
+function showCORSNotice(){
+  const existing = document.getElementById('cors-notice');
+  if(existing) return;
+  const notice = document.createElement('div');
+  notice.id = 'cors-notice';
+  notice.style.cssText = 'background:var(--amber-lt);border:1px solid rgba(146,83,12,.2);border-radius:var(--radius);padding:12px 18px;margin-bottom:16px;font-size:12.5px;color:var(--amber);line-height:1.6;';
+  notice.innerHTML = `<strong>Live DOL data requires deployment.</strong> The EFAST2 API blocks direct browser requests from local files (CORS restriction). Once this tool is deployed to a web server, it will return real Form 5500 data. Showing sample data below for demonstration. <a href="https://efts.dol.gov/EFTS-Public/search" target="_blank" style="color:var(--blue);font-weight:500;">Test the API directly →</a>`;
+  document.querySelector('.results-area').insertAdjacentElement('beforebegin', notice);
+}
+
+function parseEFAST2Results(data){
+  // Map raw EFAST2 hits to our plan model
+  const hits = data?.hits?.hits || [];
+  return hits.map((hit, idx) => {
+    const s = hit._source || {};
+    const assets = parseFloat(s.tot_assets) || 0;
+    const participants = parseInt(s.tot_partcp_boy_cnt) || parseInt(s.tot_act_partcp_boy_cnt) || 0;
+    const adminName = s.plan_admin_signed_name || s.spons_signed_name || '';
+    const adminPhone = s.spons_us_phone || '';
+    const advisor = s.sch_c_exist_ind === 'Y' ? detectAdvisorType(s) : 'None found';
+    const filingStatus = s.filing_status_cd || 'A'; // A=accepted
+
+    // Estimate peer fee by plan size
+    const peerFee = assets > 50000000 ? 0.0055 : assets > 20000000 ? 0.0061 : 0.0071;
+    // Rough all-in estimate from schedule H data if available
+    const allInFee = s.tot_plan_exp_amt && assets > 0 ? parseFloat(s.tot_plan_exp_amt)/assets : peerFee * 1.3;
+
+    // Participation rate
+    const eligiblePct = participants > 0 && s.tot_act_partcp_boy_cnt ?
+      Math.round((parseInt(s.tot_act_partcp_boy_cnt) / participants) * 100) : 75;
+
+    // Detect signals
+    const flags = [];
+    if(allInFee > peerFee * 1.1) flags.push('highFee');
+    if(advisor.toLowerCase().includes('bank') || advisor.toLowerCase().includes('merrill') || advisor.toLowerCase().includes('wells') || advisor.toLowerCase().includes('morgan')) flags.push('bankAdvisor');
+    if(advisor === 'None found') flags.push('noAdvisor');
+    if(eligiblePct < 80) flags.push('lowParticipation');
+    if(filingStatus === 'L' || s.late_ind === 'Y' || s.amended_ind === 'Y') flags.push('lateAmended');
+
+    return {
+      id: idx + 1,
+      name: s.plan_name || s.spons_dfe_name || 'Unknown Plan',
+      city: `${s.spons_dfe_city || ''}, ${s.spons_dfe_state || ''}`.trim().replace(/^,\s*/, ''),
+      state: s.spons_dfe_state || '',
+      industry: s.business_code || '',
+      type: detectPlanType(s),
+      assets,
+      participants,
+      advisor,
+      adminName,
+      adminPhone,
+      rk: s.sch_c_exist_ind === 'Y' ? 'See Schedule C' : 'Unknown',
+      allInFee: allInFee || peerFee * 1.2,
+      peerFee,
+      participationRate: eligiblePct,
+      matchFormula: s.emp_contribs_paid_amt > 0 ? 'Match in place' : 'None',
+      filingStatus: filingStatus === 'L' ? 'Late' : s.amended_ind === 'Y' ? 'Amended' : 'On time',
+      planYear: s.plan_year_begin_date ? s.plan_year_begin_date.substring(0,4) : '2023',
+      ein: s.ein || '—',
+      flags,
+      score: 0 // calculated below
+    };
+  });
+}
+
+function detectAdvisorType(s){
+  // Try to get advisor name from Schedule C data in the response
+  const name = (s.sch_c_srvce_prvdr_nm || '').toLowerCase();
+  if(!name) return 'None found';
+  if(name.includes('bank') || name.includes('wells') || name.includes('morgan') ||
+     name.includes('merrill') || name.includes('jpmorgan') || name.includes('chase'))
+    return name;
+  return name;
+}
+
+function detectPlanType(s){
+  const code = (s.type_plan_entity_cd || '').toLowerCase();
+  if(code.includes('1') || s.dc_plan_ind === 'Y') return '401(k)';
+  if(s.pens_bnft_surr_val_amt || code.includes('2')) return '403(b)';
+  return '401(k)';
+}
+
+function scorePlans(plans){
+  return plans.map(p => {
+    let score = 50;
+    if(p.flags.includes('noAdvisor')) score += 25;
+    if(p.flags.includes('highFee')) score += 20;
+    if(p.flags.includes('bankAdvisor')) score += 15;
+    if(p.flags.includes('lateAmended')) score += 12;
+    if(p.flags.includes('lowParticipation')) score += 10;
+    if(p.flags.includes('noMatch')) score += 8;
+    // Filter to only plans matching active signals
+    if(!p.flags.some(f => activeSignals.has(f))) score = 0;
+    p.score = Math.min(score, 99);
+    return p;
+  }).filter(p => p.score > 0);
+}
+
+function renderTable(plans){
+  const wrap = document.getElementById('table-wrap');
+  const countBadge = document.getElementById('tbl-count');
+  const title = document.getElementById('tbl-title');
+
+  if(!plans.length){
+    wrap.innerHTML=`<div class="table-empty"><div class="table-empty-title">No plans matched your filters</div><div class="table-empty-sub">Try adjusting the signals or expanding the asset range.</div></div>`;
+    countBadge.style.display='none';
+    return;
+  }
+
+  title.textContent = 'Results — sorted by winnability score';
+  countBadge.style.display='inline-flex';
+  countBadge.textContent = `${plans.length} plans`;
+
+  const signalDefs = {
+    highFee:'High fees',bankAdvisor:'Bank advisor',noAdvisor:'No advisor',
+    lowParticipation:'Low participation',lateAmended:'Late/amended filing',noMatch:'No match'
+  };
+
+  const rows = plans.map(p => {
+    const feeExcess = Math.round((p.allInFee - p.peerFee)*100);
+    const isTop = p.score >= 85;
+    const dots = ['highFee','bankAdvisor','noAdvisor','lowParticipation','lateAmended','noMatch']
+      .map(k=>`<div class="sdot ${p.flags.includes(k)?'on':''}" title="${signalDefs[k]}"></div>`).join('');
+    return `<tr onclick="openDrawer(${p.id})" id="row-${p.id}">
+      <td><div class="score-cell"><div class="score-badge ${isTop?'top':''}">${p.score}</div></div></td>
+      <td><div class="plan-name-cell">${p.name}</div><div style="font-size:11.5px;color:var(--ink-4);margin-top:2px;">${p.city} · ${p.industry}</div></td>
+      <td class="plan-type-cell">${p.type}</td>
+      <td class="num-cell">${fmtM(p.assets)}</td>
+      <td class="num-cell">${p.participants.toLocaleString()}</td>
+      <td class="fee-cell"><span class="fee-high">${(p.allInFee*100).toFixed(0)}bps</span><div style="font-size:11px;color:var(--ink-4);">peer: ${(p.peerFee*100).toFixed(0)}bps</div></td>
+      <td style="font-size:12.5px;color:var(--ink-3);max-width:180px;">${p.advisor==='None found'?'<span style="color:var(--blue);font-weight:500;">None on record</span>':p.advisor}</td>
+      <td><div class="signal-dots">${dots}</div></td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML=`<table class="results-table">
+    <thead><tr>
+      <th style="width:60px;text-align:center;">Score</th>
+      <th>Company &amp; Location</th>
+      <th>Type</th>
+      <th class="num">Assets</th>
+      <th class="num">Participants</th>
+      <th class="num">All-in fee</th>
+      <th>Current advisor</th>
+      <th>Signals</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function openDrawer(id){
+  const p = planDatabase.find(x=>x.id===id);
+  if(!p) return;
+  selectedPlan = p;
+
+  // Highlight row
+  document.querySelectorAll('.results-table tbody tr').forEach(r=>r.classList.remove('selected'));
+  const row = document.getElementById('row-'+id);
+  if(row) row.classList.add('selected');
+
+  const feeExcess = Math.round((p.allInFee-p.peerFee)*100);
+  const annualWaste = Math.round((p.allInFee-p.peerFee)*p.assets);
+
+  document.getElementById('d-name').textContent = p.name;
+  document.getElementById('d-meta').textContent = `${p.type} · ${p.city} · EIN ${p.ein}`;
+
+  const signalItems = buildSignalItems(p, feeExcess, annualWaste);
+  const email = buildEmail(p, feeExcess, annualWaste);
+  const subject = buildSubjectLine(p, feeExcess);
+  const approach = buildApproach(p, feeExcess, annualWaste);
+
+  document.getElementById('drawer-body').innerHTML = `
+    <div class="drawer-sec">
+      <div class="drawer-sec-label">Plan snapshot</div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="stat-lbl">Assets</div><div class="stat-val">${fmtM(p.assets)}</div><div class="stat-note">Plan year ${p.planYear}</div></div>
+        <div class="stat-card"><div class="stat-lbl">Participants</div><div class="stat-val">${p.participants.toLocaleString()}</div><div class="stat-note">Eligible employees</div></div>
+        <div class="stat-card"><div class="stat-lbl">All-in fee</div><div class="stat-val">${(p.allInFee*100).toFixed(0)}bps</div><div class="stat-note">Peer: ${(p.peerFee*100).toFixed(0)}bps</div></div>
+        <div class="stat-card"><div class="stat-lbl">Participation</div><div class="stat-val">${p.participationRate}%</div><div class="stat-note">${p.participationRate<80?'Below 80% threshold':'Above threshold'}</div></div>
+      </div>
+      <div style="background:var(--bg);border-radius:6px;padding:11px 14px;font-size:13px;color:var(--ink-3);line-height:1.55;">
+        <strong style="color:var(--ink-2);">Recordkeeper:</strong> ${p.rk} &nbsp;·&nbsp; 
+        <strong style="color:var(--ink-2);">Current advisor:</strong> ${p.advisor} &nbsp;·&nbsp; 
+        <strong style="color:var(--ink-2);">5500 filing:</strong> ${p.filingStatus} &nbsp;·&nbsp;
+        <strong style="color:var(--ink-2);">Match:</strong> ${p.matchFormula}
+      </div>
+    </div>
+
+    <div class="drawer-sec">
+      <div class="drawer-sec-label">Why this plan is winnable</div>
+      <div>${signalItems}</div>
+    </div>
+
+    <div class="drawer-sec">
+      <div class="drawer-sec-label">Approach strategy</div>
+      <div class="approach-text">${approach}</div>
+    </div>
+
+    <div class="drawer-sec">
+      <div class="drawer-sec-label">Outreach email</div>
+      <div class="outreach-section">
+        <div class="oe-hdr">
+          <div class="oe-title">Personalized outreach — ready to send</div>
+          <button class="copy-btn" onclick="copyEmail()">Copy</button>
+        </div>
+        <div class="oe-subject"><strong>Subject:</strong> ${subject}</div>
+        <div class="oe-body" id="email-text">${email}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.querySelectorAll('.results-table tbody tr').forEach(r=>r.classList.remove('selected'));
+}
+
+/* ── Signal items ── */
+function buildSignalItems(p, feeExcess, annualWaste){
+  const items = [];
+
+  if(p.flags.includes('highFee')) items.push({
+    label:`Fees ${feeExcess}bps above peer median`,
+    desc:`This plan is paying approximately $${fmt(annualWaste)}/year above what comparable plans pay. Every dollar above the benchmark is money leaving participant accounts — a specific, documentable excessive fee exposure.`,
+    impact:`$${fmt(annualWaste)}/yr in quantifiable participant harm`
+  });
+
+  if(p.flags.includes('bankAdvisor')) items.push({
+    label:`Bank or wirehouse advisor — no fiduciary agreement`,
+    desc:`${p.advisor} is listed as the plan advisor. Bank and wirehouse advisors almost never sign a named 3(21) or 3(38) fiduciary agreement — meaning the committee retains 100% of personal investment liability.`,
+    impact:`Committee has no fiduciary coverage — significant personal liability`
+  });
+
+  if(p.flags.includes('noAdvisor')) items.push({
+    label:`No investment advisor on record`,
+    desc:`No advisor is listed on Schedule C of the Form 5500. The committee is making every investment and plan design decision without a named fiduciary — and almost certainly doesn't know the full scope of their personal ERISA exposure.`,
+    impact:`Open field — no incumbent to navigate`
+  });
+
+  if(p.flags.includes('lowParticipation')) items.push({
+    label:`Participation rate below 80% threshold`,
+    desc:`At ${p.participationRate}%, a significant share of eligible employees are not building retirement savings. Low participation is almost always a plan design problem, not a communication problem — and is correctable.`,
+    impact:`10–15% participation improvement typical with auto-enrollment`
+  });
+
+  if(p.flags.includes('lateAmended')) items.push({
+    label:`${p.filingStatus} Form 5500`,
+    desc:`A late or amended 5500 filing is the #1 trigger for DOL audit selection. It signals to the DOL that the plan may have broader administrative compliance issues — and the committee almost certainly doesn't know the exposure.`,
+    impact:`#1 DOL audit trigger — compliance urgency opens the door`
+  });
+
+  if(p.flags.includes('noMatch')) items.push({
+    label:`No employer match — plan design gap`,
+    desc:`This plan offers no employer match, making it a competitive disadvantage in recruiting and the primary driver of the low participation rate. Introducing a modest match typically drives 10–15% participation improvement within 12 months.`,
+    impact:`Immediate participation and retention improvement`
+  });
+
+  return items.map(item=>`<div class="signal-row">
+    <div class="signal-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5"/></svg></div>
+    <div>
+      <div class="signal-name">${item.label}</div>
+      <div class="signal-desc">${item.desc}</div>
+      <div class="signal-impact">${item.impact}</div>
+    </div>
+  </div>`).join('');
+}
+
+function buildApproach(p, feeExcess, annualWaste){
+  if(p.flags.includes('noAdvisor')){
+    return `Direct, cold outreach to the HR Director or CFO. This is an open field — no incumbent to navigate around. Lead with the specific fee exposure ($${fmt(annualWaste)}/yr) from their Form 5500 and the personal liability angle. Committee members with no advisor are unprotected and typically don't know the full scope of their ERISA exposure.\n\nBefore cold outreach, check whether any of your CPA partners knows someone at ${p.name}. A warm introduction from a trusted CPA is worth 3× a cold email.\n\nTiming: File season (Q1–Q2) is the best window — the 5500 was just filed and fees are visible.`;
+  }
+  if(p.flags.includes('lateAmended') && !p.flags.includes('bankAdvisor')){
+    return `Lead with the compliance angle — not the fee pitch. A late or amended 5500 is something most committees don't realize creates audit exposure. Position yourself as a resource who noticed something they should know about, not as someone trying to displace their advisor.\n\nOpening line: "I noticed your most recent Form 5500 was filed late — I work with a few plans that have had similar situations and wanted to reach out in case it would be helpful to talk through the exposure."\n\nThis gets you in the room without triggering incumbent-advisor defensiveness.`;
+  }
+  if(p.flags.includes('bankAdvisor')){
+    return `Lead with the fee benchmarking — not advisor criticism. Never attack the incumbent directly. Position the approach as a benchmarking exercise: "most committees find it useful to compare periodically, regardless of what they decide to do." Once they see the ${feeExcess}bps gap and the $${fmt(annualWaste)}/yr figure, the comparison does the work for you.\n\nIf you have a CPA connection: ask the CPA to make an introduction framed as "I thought you might want a second opinion on your fees." That framing bypasses the defensiveness entirely.\n\nTiming: 60–90 days before the advisor's annual contract renewal.`;
+  }
+  return `Data-first outreach — lead with numbers, not a pitch. Don't open with credentials or services. Open with two numbers from their Form 5500: their all-in cost (${(p.allInFee*100).toFixed(0)}bps) and the peer median (${(p.peerFee*100).toFixed(0)}bps). The $${fmt(annualWaste)} annual figure is concrete enough to get a response from a CFO without any selling language.\n\nSubject line matters: reference the specific dollar figure. Generic subject lines go to spam.\n\nFollow-up: if no email response, a LinkedIn message 5 days later has 3× higher response rate than a second email for plan sponsor contacts.`;
+}
+
+function buildSubjectLine(p, feeExcess){
+  if(p.flags.includes('noAdvisor')) return `${p.name}'s ${p.type} — a quick question`;
+  if(p.flags.includes('lateAmended')) return `Your ${p.planYear} Form 5500 filing — wanted to flag something`;
+  if(p.flags.includes('highFee')) return `${p.name}'s plan costs ${feeExcess}bps more than peers — worth 15 minutes?`;
+  return `A data point about ${p.name}'s retirement plan`;
+}
+
+function buildEmail(p, feeExcess, annualWaste){
+  const closing=`\n\nRobert Delgado, CFA\nFirst Hill Trust — Retirement Services\n800.967.3709 · compliance@fhtretirement.com`;
+  if(p.flags.includes('noAdvisor')) return `Hi —\n\nI pulled your plan's most recent Form 5500 filing and noticed something worth flagging — there's no investment advisor listed on Schedule C.\n\nThat means your committee is making all investment and plan design decisions without a named fiduciary advisor. Under ERISA, that places full personal liability on committee members for every investment decision made — which most committees are surprised to learn.\n\nI work with plan committees at First Hill Trust as a dedicated 3(38) or 3(21) fiduciary advisor. I'd like to show you a two-page benchmark for your plan — fees vs. peers, fund performance, and the specific documentation gaps that create exposure. It takes 20 minutes and most committees find it useful regardless of what they decide to do with it.\n\nWould a brief call work this week?${closing}`;
+  if(p.flags.includes('bankAdvisor')) return `Hi —\n\nI pulled your plan's most recent Form 5500 data and wanted to share something: your plan's all-in cost is approximately ${(p.allInFee*100).toFixed(0)} basis points, compared to a peer median of ${(p.peerFee*100).toFixed(0)} basis points for ${p.industry} companies with around ${p.participants} participants.\n\nThat ${feeExcess}-basis-point difference represents about $${fmt(annualWaste)} per year in costs above the benchmark — money that would otherwise compound in participant accounts.\n\nI'm not asking you to make any changes. I'd just like to show you the full comparison in person. Most committees find it useful to have the benchmark regardless of what they decide to do.\n\nWould 20 minutes work this week or next?${closing}`;
+  return `Hi —\n\nI came across ${p.name}'s retirement plan through public DOL Form 5500 filings and wanted to reach out.\n\nYour plan's all-in cost of ${(p.allInFee*100).toFixed(0)} basis points is ${feeExcess} basis points above the peer median for ${p.industry} companies your size — which translates to approximately $${fmt(annualWaste)} per year in excess costs.\n\nI work with plan committees at First Hill Trust as a dedicated fiduciary advisor. I'd like to share a two-page benchmark report specific to your plan — fees, fund performance, and participant outcomes compared to peers.\n\nWould 20 minutes work this week?${closing}`;
+}
+
+function generateReportCard(){
+  if(!selectedPlan) return;
+  const p = selectedPlan;
+  const params = new URLSearchParams({
+    co: p.name,
+    type: p.type,
+    assets: p.assets,
+    participants: p.participants,
+    fee: Math.round(p.allInFee * 100),
+    peer: Math.round(p.peerFee * 100),
+    participation: p.participationRate,
+    filing: p.filingStatus === 'On time' ? 'ontime' : p.filingStatus.toLowerCase().includes('late') ? 'late' : 'amended',
+    advisor: p.advisor === 'None found' ? 'none' : p.advisor.toLowerCase().includes('bank') || p.advisor.toLowerCase().includes('morgan') || p.advisor.toLowerCase().includes('merrill') || p.advisor.toLowerCase().includes('wells') || p.advisor.toLowerCase().includes('jpmorgan') ? 'bank' : 'independent',
+    match: p.matchFormula === 'None' ? 'none' : 'below',
+    auto: 'none',
+    admin: '',
+    admintitle: ''
+  });
+  window.open('fht-plan-report-card.html?' + params.toString(), '_blank');
+}
+
+
+  const el=document.getElementById('email-text');
+  if(!el) return;
+  navigator.clipboard.writeText(el.textContent).then(()=>toast('Email copied to clipboard'));
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',2000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FHT — Plan Report Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f1923;--ink-2:#2d3a4a;--ink-3:#5a6a7e;--ink-4:#8a98a8;
+  --border:#dde3eb;--border-2:#eaeff5;--bg:#f5f7fa;--surface:#fff;
+  --blue:#1565e8;--blue-lt:#eff3fd;
+  --green:#0d7a4e;--green-lt:#edf6f1;
+  --amber:#92530c;--amber-lt:#fef6ee;
+  --red:#b91c1c;--red-lt:#fef2f2;
+  --radius:8px;
+  --shadow:0 1px 3px rgba(15,25,35,.06),0 1px 2px rgba(15,25,35,.04);
+  --shadow-md:0 4px 20px rgba(15,25,35,.09);
+  --shadow-lg:0 8px 40px rgba(15,25,35,.13);
+}
+body{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+
+/* NAV */
+.topnav{background:#fff;border-bottom:1px solid var(--border);height:56px;padding:0 40px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.logo-mark{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{fill:white;width:14px;height:14px;}
+.logo-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);line-height:1.1;}
+.logo-sub{font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.6px;}
+.nav-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+.nav-links{display:flex;gap:2px;}
+.nav-link{background:none;border:none;padding:6px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.nav-link:hover{background:var(--bg);color:var(--ink);}
+.nav-link.active{background:var(--blue-lt);color:var(--blue);font-weight:600;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.user-pill{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border:1px solid var(--border);border-radius:20px;}
+.user-av{width:26px;height:26px;background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;}
+.user-name{font-size:12.5px;font-weight:500;color:var(--ink-2);}
+
+/* PAGE */
+.page{max-width:900px;margin:0 auto;padding:40px 32px 80px;}
+.page-hdr{margin-bottom:28px;}
+.page-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-4);margin-bottom:6px;}
+.page-title{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.page-sub{font-size:13.5px;color:var(--ink-3);max-width:560px;line-height:1.65;}
+
+/* INPUT FORM */
+.input-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;margin-bottom:24px;box-shadow:var(--shadow);}
+.input-card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);margin-bottom:16px;}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.input-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.input-grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:0;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field.full{grid-column:1/-1;}
+.field-lbl{font-size:11.5px;font-weight:600;color:var(--ink-3);}
+.field-inp{background:var(--bg);border:1.5px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13.5px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .12s;}
+.field-inp:focus{border-color:var(--blue);background:#fff;}
+.field-sel{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%238a98a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+
+.generate-bar{background:#f0f4fe;border:1px solid rgba(21,101,232,.18);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.generate-bar-text{font-size:13px;color:var(--ink-3);}
+.generate-bar-text strong{color:var(--ink-2);}
+.gen-btn{background:var(--blue);border:none;color:white;border-radius:var(--radius);padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .12s;white-space:nowrap;}
+.gen-btn:hover{opacity:.88;}
+
+/* ════════════════════════════════
+   REPORT CARD OUTPUT
+════════════════════════════════ */
+#report-wrap{display:none;}
+
+.report-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.report-actions-left{font-size:13px;color:var(--ink-4);}
+.report-actions-left strong{color:var(--ink-2);}
+.report-actions-btns{display:flex;gap:8px;}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;padding:8px 18px;transition:all .12s;}
+.btn-primary{background:var(--blue);color:#fff;}.btn-primary:hover{background:#1254c5;}
+.btn-secondary{background:#fff;color:var(--ink-2);border:1px solid var(--border);}.btn-secondary:hover{border-color:var(--ink-3);}
+.btn-sm{padding:5px 13px;font-size:12px;}
+
+/* THE REPORT CARD DOCUMENT */
+.report-card{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-md);}
+
+/* Cover header */
+.rc-header{background:#f8f9fb;border-bottom:1px solid var(--border);padding:28px 36px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+.rc-hdr-left{}
+.rc-hdr-logo{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.rc-hdr-lm{width:22px;height:22px;background:var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.rc-hdr-lm svg{fill:white;width:11px;height:11px;}
+.rc-hdr-ln{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--ink-3);}
+.rc-hdr-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-4);margin-bottom:6px;}
+.rc-hdr-company{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:4px;}
+.rc-hdr-meta{font-size:13px;color:var(--ink-4);}
+
+/* Overall grade */
+.rc-hdr-right{text-align:center;flex-shrink:0;}
+.rc-overall-grade{width:88px;height:88px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid;}
+.rc-grade-letter{font-family:'Fraunces',serif;font-size:36px;font-weight:700;line-height:1;}
+.rc-grade-sub{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.rc-overall-label{font-size:11px;font-weight:600;margin-top:8px;}
+
+/* Grade colors */
+.grade-a{border-color:var(--green);color:var(--green);background:var(--green-lt);}
+.grade-a .rc-grade-letter,.grade-a .rc-grade-sub{color:var(--green);}
+.grade-b{border-color:#2563eb;color:#2563eb;background:#eff6ff;}
+.grade-b .rc-grade-letter,.grade-b .rc-grade-sub{color:#2563eb;}
+.grade-c{border-color:var(--amber);color:var(--amber);background:var(--amber-lt);}
+.grade-c .rc-grade-letter,.grade-c .rc-grade-sub{color:var(--amber);}
+.grade-d{border-color:#dc6b1a;color:#dc6b1a;background:#fff7ed;}
+.grade-d .rc-grade-letter,.grade-d .rc-grade-sub{color:#dc6b1a;}
+.grade-f{border-color:var(--red);color:var(--red);background:var(--red-lt);}
+.grade-f .rc-grade-letter,.grade-f .rc-grade-sub{color:var(--red);}
+
+/* Category grades */
+.rc-grades{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border);}
+.rc-grade-cell{padding:20px 16px;border-right:1px solid var(--border-2);text-align:center;}
+.rc-grade-cell:last-child{border-right:none;}
+.rc-cat-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);margin-bottom:12px;line-height:1.4;min-height:28px;display:flex;align-items:center;justify-content:center;}
+.rc-cat-grade{width:52px;height:52px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 10px;border:2px solid;}
+.rc-cat-grade-letter{font-family:'Fraunces',serif;font-size:22px;font-weight:700;line-height:1;}
+.rc-cat-actual{font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:2px;}
+.rc-cat-bench{font-size:11px;color:var(--ink-4);}
+
+/* What this means */
+.rc-findings{padding:24px 36px;border-bottom:1px solid var(--border-2);}
+.rc-findings-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-4);margin-bottom:14px;}
+.rc-finding-row{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--border-2);}
+.rc-finding-row:last-child{border-bottom:none;}
+.rc-finding-grade{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:13px;font-weight:700;flex-shrink:0;border:1.5px solid;}
+.rc-finding-text{flex:1;}
+.rc-finding-title{font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:2px;}
+.rc-finding-desc{font-size:12.5px;color:var(--ink-3);line-height:1.55;}
+
+/* CTA */
+.rc-cta{padding:24px 36px;background:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:24px;}
+.rc-cta-text{color:rgba(255,255,255,.75);font-size:13.5px;line-height:1.6;}
+.rc-cta-text strong{color:#fff;}
+.rc-cta-contact{text-align:right;flex-shrink:0;}
+.rc-cta-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:2px;}
+.rc-cta-details{font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;}
+
+/* Disclaimer */
+.rc-disclaimer{padding:14px 36px;background:var(--bg);border-top:1px solid var(--border-2);}
+.rc-disclaimer-text{font-size:11px;color:var(--ink-4);line-height:1.55;}
+
+/* EMAIL PREVIEW */
+.email-preview{background:#fff;border:1px solid var(--border);border-radius:var(--radius);margin-top:20px;overflow:hidden;box-shadow:var(--shadow);}
+.ep-hdr{padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:space-between;}
+.ep-title{font-size:12.5px;font-weight:600;color:var(--ink-2);}
+.ep-copy{font-size:12px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;}
+.ep-copy:hover{text-decoration:underline;}
+.ep-subject{padding:12px 20px;border-bottom:1px solid var(--border-2);font-size:13px;color:var(--ink-3);}
+.ep-subject strong{color:var(--ink-2);}
+.ep-body{padding:18px 20px;font-size:13.5px;color:var(--ink-2);line-height:1.85;white-space:pre-wrap;}
+
+/* Toast */
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;z-index:999;transition:opacity .2s;white-space:nowrap;box-shadow:var(--shadow-md);}
+
+/* PRINT */
+@media print{
+  .topnav,.page-hdr,.input-card,.generate-bar,.report-actions,.email-preview,#toast{display:none!important;}
+  .page{padding:0;max-width:100%;}
+  #report-wrap{display:block!important;}
+  .report-card{box-shadow:none;border:none;border-radius:0;}
+  .rc-cta{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .rc-overall-grade,.rc-cat-grade{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a class="logo" href="#">
+    <div class="logo-mark"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v8l7 4 7-4V6L10 2zm0 2.3l5 2.8v6.4l-5 2.8-5-2.8V7.1l5-2.8z"/></svg></div>
+    <div><div class="logo-name">First Hill Trust</div><div class="logo-sub">Retirement Services</div></div>
+  </a>
+  <div class="nav-sep"></div>
+  <div class="nav-links">
+    <button class="nav-link">Dashboard</button>
+    <button class="nav-link">Plan Prospector</button>
+    <button class="nav-link">Gap Analysis</button>
+    <button class="nav-link active">Plan Report Card</button>
+  </div>
+  <div class="nav-right">
+    <div class="user-pill">
+      <div class="user-av">RD</div>
+      <div class="user-name">Robert Delgado</div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-hdr">
+    <div class="page-eyebrow">Business Development Tool</div>
+    <div class="page-title">Plan Report Card</div>
+    <div class="page-sub">Enter a plan's Form 5500 data and generate a personalized report card. Send it cold — before the first call — so the plan administrator sees their actual numbers before Robert ever introduces himself.</div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-card">
+    <div class="input-card-title">Plan data — from Form 5500</div>
+    <div class="input-grid" style="margin-bottom:12px;">
+      <div class="field full"><div class="field-lbl">Company name</div><input class="field-inp" id="i-co" type="text" placeholder="e.g. Westfield Industrial Group"/></div>
+    </div>
+    <div class="input-grid" style="margin-bottom:12px;">
+      <div class="field"><div class="field-lbl">Plan type</div><select class="field-inp field-sel" id="i-type"><option>401(k)</option><option>403(b)</option><option>DB Pension</option><option>SIMPLE IRA</option></select></div>
+      <div class="field"><div class="field-lbl">Plan assets</div><input class="field-inp" id="i-assets" type="text" placeholder="e.g. 22000000"/></div>
+      <div class="field"><div class="field-lbl">Participants</div><input class="field-inp" id="i-participants" type="text" placeholder="e.g. 312"/></div>
+    </div>
+    <div class="input-grid-4" style="margin-bottom:12px;">
+      <div class="field"><div class="field-lbl">All-in fee (bps)</div><input class="field-inp" id="i-fee" type="text" placeholder="e.g. 94"/></div>
+      <div class="field"><div class="field-lbl">Peer median (bps)</div><input class="field-inp" id="i-peer" type="text" placeholder="e.g. 61"/></div>
+      <div class="field"><div class="field-lbl">Participation rate %</div><input class="field-inp" id="i-participation" type="text" placeholder="e.g. 71"/></div>
+      <div class="field"><div class="field-lbl">Filing status</div><select class="field-inp field-sel" id="i-filing"><option value="ontime">On time</option><option value="late">Late</option><option value="amended">Amended</option></select></div>
+    </div>
+    <div class="input-grid" style="margin-bottom:12px;">
+      <div class="field"><div class="field-lbl">Current advisor</div><select class="field-inp field-sel" id="i-advisor"><option value="none">No advisor on record</option><option value="bank">Bank or wirehouse</option><option value="independent">Independent RIA</option><option value="fiduciary">Named fiduciary advisor</option></select></div>
+      <div class="field"><div class="field-lbl">Employer match</div><select class="field-inp field-sel" id="i-match"><option value="none">No match offered</option><option value="below">Below peer median</option><option value="atpeer">At peer median</option><option value="above">Above peer median</option></select></div>
+      <div class="field"><div class="field-lbl">Auto-enrollment</div><select class="field-inp field-sel" id="i-auto"><option value="none">Not in place</option><option value="low">Below 6% default</option><option value="good">6%+ default</option></select></div>
+    </div>
+    <div class="input-grid-2" style="margin-bottom:0;">
+      <div class="field"><div class="field-lbl">Plan administrator name (from 5500)</div><input class="field-inp" id="i-admin" type="text" placeholder="e.g. Sarah Kolb"/></div>
+      <div class="field"><div class="field-lbl">Administrator title</div><input class="field-inp" id="i-admintitle" type="text" placeholder="e.g. HR Director"/></div>
+    </div>
+  </div>
+
+  <div class="generate-bar">
+    <div class="generate-bar-text"><strong>Enter the plan data above</strong> — all fields pulled directly from the Form 5500. The report card and outreach email generate instantly.</div>
+    <button class="gen-btn" onclick="generate()">Generate Report Card</button>
+  </div>
+
+  <!-- REPORT OUTPUT -->
+  <div id="report-wrap">
+    <div class="report-actions">
+      <div class="report-actions-left">Report card ready — <strong id="ra-company">—</strong></div>
+      <div class="report-actions-btns">
+        <button class="btn btn-secondary btn-sm" onclick="copyEmail()">Copy email</button>
+        <button class="btn btn-primary btn-sm" onclick="openPDF()">Open PDF</button>
+      </div>
+    </div>
+
+    <!-- THE REPORT CARD -->
+    <div class="report-card" id="report-card">
+
+      <!-- Header -->
+      <div class="rc-header">
+        <div class="rc-hdr-left">
+          <div class="rc-hdr-logo">
+            <div class="rc-hdr-lm"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v8l7 4 7-4V6L10 2zm0 2.3l5 2.8v6.4l-5 2.8-5-2.8V7.1l5-2.8z"/></svg></div>
+            <div class="rc-hdr-ln">First Hill Trust — Retirement Services</div>
+          </div>
+          <div class="rc-hdr-label">Retirement Plan Report Card</div>
+          <div class="rc-hdr-company" id="rc-company">—</div>
+          <div class="rc-hdr-meta" id="rc-meta">—</div>
+        </div>
+        <div class="rc-hdr-right">
+          <div class="rc-overall-grade" id="rc-overall-grade">
+            <div class="rc-grade-letter" id="rc-overall-letter">—</div>
+            <div class="rc-grade-sub">Overall</div>
+          </div>
+          <div class="rc-overall-label" id="rc-overall-label">—</div>
+        </div>
+      </div>
+
+      <!-- Five category grades -->
+      <div class="rc-grades" id="rc-grades"></div>
+
+      <!-- Findings -->
+      <div class="rc-findings">
+        <div class="rc-findings-title">What these grades mean for your plan</div>
+        <div id="rc-findings-list"></div>
+      </div>
+
+      <!-- CTA -->
+      <div class="rc-cta">
+        <div class="rc-cta-text">
+          <strong>Every one of these areas is improvable.</strong> First Hill Trust works with plan committees as a dedicated fiduciary advisor — addressing each gap, reducing fees, improving participant outcomes, and providing the documentation every committee needs to satisfy its ERISA obligations. Most committees see a full letter grade improvement within 12 months of engagement.
+        </div>
+        <div class="rc-cta-contact">
+          <div class="rc-cta-name">Robert Delgado, CFA</div>
+          <div class="rc-cta-details">First Hill Trust — Retirement Services<br>800.967.3709<br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e98a868499858088878a8ca98f819d9b8c9d809b8c848c879dc78a8684">[email&#160;protected]</a></div>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="rc-disclaimer">
+        <div class="rc-disclaimer-text">This report card was prepared by First Hill Trust using publicly available Form 5500 data filed with the U.S. Department of Labor. Grades reflect performance relative to peer plans of comparable size and industry. This is not a legal opinion and should not be construed as investment advice. Data reflects the most recent available Form 5500 filing. © <span id="rc-year"></span> First Hill Trust Retirement Services.</div>
+      </div>
+    </div>
+
+    <!-- Email preview -->
+    <div class="email-preview">
+      <div class="ep-hdr">
+        <div class="ep-title">Outreach email — ready to send with the report card attached</div>
+        <button class="ep-copy" onclick="copyEmail()">Copy email</button>
+      </div>
+      <div class="ep-subject"><strong>Subject:</strong> <span id="ep-subject">—</span></div>
+      <div class="ep-body" id="ep-body">—</div>
+    </div>
+  </div>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Auto-populate from URL params if coming from Plan Prospector
+window.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(window.location.search);
+  if(!p.get('co')) return; // no params, show blank form
+
+  const fields = {
+    'i-co': p.get('co'),
+    'i-assets': p.get('assets'),
+    'i-participants': p.get('participants'),
+    'i-fee': p.get('fee'),
+    'i-peer': p.get('peer'),
+    'i-participation': p.get('participation'),
+    'i-admin': p.get('admin') || '',
+    'i-admintitle': p.get('admintitle') || '',
+  };
+  const selects = {
+    'i-type': p.get('type'),
+    'i-filing': p.get('filing'),
+    'i-advisor': p.get('advisor'),
+    'i-match': p.get('match'),
+    'i-auto': p.get('auto'),
+  };
+
+  Object.entries(fields).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if(el && val) el.value = val;
+  });
+  Object.entries(selects).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if(el && val){
+      [...el.options].forEach(o => { if(o.value === val) o.selected = true; });
+    }
+  });
+
+  // Auto-generate immediately
+  generate();
+
+  // Scroll to top to show report
+  window.scrollTo(0, 0);
+});
+
+function fmtM(n){
+  const num = parseFloat(n);
+  if(isNaN(num)) return n;
+  return num>=1000000?'$'+(num/1000000).toFixed(1)+'M':'$'+(num/1000).toFixed(0)+'K';
+}
+function fmt(n){return Math.round(n).toLocaleString();}
+
+/* ── GRADING LOGIC ── */
+function gradeFee(actual, peer){
+  const diff = actual - peer;
+  if(diff <= 5) return 'A';
+  if(diff <= 15) return 'B';
+  if(diff <= 25) return 'C';
+  if(diff <= 40) return 'D';
+  return 'F';
+}
+function gradeParticipation(rate){
+  if(rate >= 90) return 'A';
+  if(rate >= 80) return 'B';
+  if(rate >= 70) return 'C';
+  if(rate >= 60) return 'D';
+  return 'F';
+}
+function gradeCompliance(filing){
+  if(filing === 'ontime') return 'A';
+  if(filing === 'amended') return 'C';
+  return 'D';
+}
+function gradeInvestment(advisor){
+  if(advisor === 'fiduciary') return 'A';
+  if(advisor === 'independent') return 'B';
+  if(advisor === 'bank') return 'D';
+  return 'F';
+}
+function gradePlanDesign(match, autoEnroll){
+  let score = 0;
+  if(match === 'above') score += 2;
+  else if(match === 'atpeer') score += 1;
+  if(autoEnroll === 'good') score += 2;
+  else if(autoEnroll === 'low') score += 1;
+  if(score >= 4) return 'A';
+  if(score === 3) return 'B';
+  if(score === 2) return 'C';
+  if(score === 1) return 'D';
+  return 'F';
+}
+function overallGrade(grades){
+  const map={A:4,B:3,C:2,D:1,F:0};
+  const avg = grades.reduce((s,g)=>s+(map[g]||0),0)/grades.length;
+  if(avg >= 3.5) return 'A';
+  if(avg >= 2.5) return 'B';
+  if(avg >= 1.5) return 'C';
+  if(avg >= 0.75) return 'D';
+  return 'F';
+}
+function gradeClass(g){
+  return 'grade-'+g.toLowerCase();
+}
+function gradeLabel(g){
+  return {A:'Excellent',B:'Good',C:'Fair',D:'Poor',F:'Critical'}[g]||'';
+}
+
+/* ── GENERATE ── */
+function generate(){
+  const co = document.getElementById('i-co').value.trim() || 'Unknown Company';
+  const type = document.getElementById('i-type').value;
+  const assets = document.getElementById('i-assets').value.trim() || '0';
+  const participants = parseInt(document.getElementById('i-participants').value) || 0;
+  const feeBps = parseFloat(document.getElementById('i-fee').value) || 0;
+  const peerBps = parseFloat(document.getElementById('i-peer').value) || 0;
+  const participation = parseFloat(document.getElementById('i-participation').value) || 0;
+  const filing = document.getElementById('i-filing').value;
+  const advisor = document.getElementById('i-advisor').value;
+  const match = document.getElementById('i-match').value;
+  const autoEnroll = document.getElementById('i-auto').value;
+  const admin = document.getElementById('i-admin').value.trim() || 'Plan Administrator';
+  const adminTitle = document.getElementById('i-admintitle').value.trim() || 'HR Director';
+
+  const gFee = gradeFee(feeBps, peerBps);
+  const gPart = gradeParticipation(participation);
+  const gComp = gradeCompliance(filing);
+  const gInv = gradeInvestment(advisor);
+  const gDesign = gradePlanDesign(match, autoEnroll);
+  const gOverall = overallGrade([gFee,gPart,gComp,gInv,gDesign]);
+
+  const feeExcess = Math.round(feeBps - peerBps);
+  const annualWaste = Math.round((feeBps-peerBps)/100 * parseFloat(assets));
+  const today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const year = new Date().getFullYear();
+
+  // Update header
+  document.getElementById('ra-company').textContent = co;
+  document.getElementById('rc-company').textContent = co;
+  document.getElementById('rc-meta').textContent = `${type} · ${fmtM(assets)} in plan assets · ${participants.toLocaleString()} participants · Report date: ${today}`;
+  document.getElementById('rc-year').textContent = year;
+
+  // Overall grade
+  const og = document.getElementById('rc-overall-grade');
+  og.className = 'rc-overall-grade '+gradeClass(gOverall);
+  document.getElementById('rc-overall-letter').textContent = gOverall;
+  document.getElementById('rc-overall-label').textContent = gradeLabel(gOverall);
+
+  // Category grades — reordered to hit hardest first
+  const cats = [
+    {
+      label:'Fee Exposure',
+      grade:gFee,
+      actual: annualWaste > 0 ? `$${fmt(annualWaste)}/yr above peers` : 'At peer median',
+      bench:`${feeBps}bps vs ${peerBps}bps peer`
+    },
+    {
+      label:'Personal Liability',
+      grade:gInv,
+      actual:advisor==='fiduciary'?'Protected':advisor==='independent'?'Partial coverage':advisor==='bank'?'Unprotected':'No coverage',
+      bench:'Named fiduciary required'
+    },
+    {
+      label:'DOL Audit Risk',
+      grade:gComp,
+      actual:filing==='ontime'?'Low risk':filing==='late'?'High risk — late filing':'Elevated — amended',
+      bench:'On-time filing required'
+    },
+    {
+      label:'Participation Rate',
+      grade:gPart,
+      actual:`${participation}% enrolled`,
+      bench:'Best practice: 80%+'
+    },
+    {
+      label:'Plan Design',
+      grade:gDesign,
+      actual:match==='none'?'No match offered':match==='below'?'Below peer match':'Match in place',
+      bench:autoEnroll==='good'?'Auto-enroll: Active':'Auto-enroll: Inactive'
+    },
+  ];
+
+  document.getElementById('rc-grades').innerHTML = cats.map(c=>`
+    <div class="rc-grade-cell">
+      <div class="rc-cat-label">${c.label}</div>
+      <div class="rc-cat-grade ${gradeClass(c.grade)}">
+        <div class="rc-cat-grade-letter">${c.grade}</div>
+      </div>
+      <div class="rc-cat-actual">${c.actual}</div>
+      <div class="rc-cat-bench">${c.bench}</div>
+    </div>`).join('');
+
+  // Findings — rewritten to hit hard on dollars, personal liability, DOL audit risk
+  const findings = [];
+
+  // 1. Fee Exposure — dollars first, always
+  if(gFee === 'F' || gFee === 'D'){
+    findings.push({grade:gFee,
+      title:`$${fmt(annualWaste)} per year above what comparable plans are paying`,
+      desc:`${co}'s ${type} is paying ${feeBps} basis points in all-in fees against a peer median of ${peerBps} basis points for plans of comparable size and industry. The ${feeExcess}-point gap translates to $${fmt(annualWaste)} per year — every dollar of which would otherwise be compounding in participant retirement accounts. Under ERISA's duty of loyalty, the committee is legally required to ensure all fees are reasonable and to document that review. Without a benchmarking study on file, the committee has no defense against an excessive fee claim.`
+    });
+  } else if(gFee === 'C'){
+    findings.push({grade:gFee,
+      title:`$${fmt(annualWaste)} per year in potential cost reduction`,
+      desc:`At ${feeBps} basis points against a peer median of ${peerBps} basis points, this plan is paying approximately $${fmt(annualWaste)}/year above benchmark. While not a critical exposure, ERISA's duty of loyalty requires documented fee benchmarking regardless of the outcome. Without a formal study on file, the committee cannot demonstrate it has met this obligation.`
+    });
+  } else {
+    findings.push({grade:gFee,
+      title:`Plan fees are at or below the peer median`,
+      desc:`At ${feeBps} basis points, this plan's all-in fees are competitive with the peer median of ${peerBps} basis points. Annual fee benchmarking documentation should be retained in the committee's fiduciary file to demonstrate ongoing prudent oversight — even when fees are already in line.`
+    });
+  }
+
+  // 2. Personal Liability — direct and specific
+  if(gInv === 'F'){
+    findings.push({grade:gInv,
+      title:`Committee members are personally liable for every investment decision in this plan`,
+      desc:`No investment advisor appears on Schedule C of this plan's Form 5500. Under ERISA Section 409, each member of the investment committee can be held personally liable — out of their own assets — for any investment loss the plan suffers if they cannot demonstrate a prudent process. Without a named 3(21) or 3(38) fiduciary advisor, there is no documented process and no liability transfer. This is not a hypothetical risk. ERISA fiduciary breach lawsuits against individual committee members have resulted in personal judgments in the millions of dollars.`
+    });
+  } else if(gInv === 'D'){
+    findings.push({grade:gInv,
+      title:`Bank advisor relationship does not protect committee members from personal liability`,
+      desc:`A bank or wirehouse advisor is listed on Schedule C. However, bank and wirehouse advisors almost never sign a named 3(21) co-fiduciary or 3(38) investment management agreement — meaning the committee retains full personal investment liability despite paying for advisory services. Ask your current advisor to produce the signed fiduciary agreement. If one does not exist, the committee has no documented protection.`
+    });
+  } else if(gInv === 'B'){
+    findings.push({grade:gInv,
+      title:`Independent advisor in place — verify fiduciary agreement is signed`,
+      desc:`An independent RIA is listed on Schedule C. Depending on whether a formal 3(21) or 3(38) fiduciary agreement has been signed, the committee may or may not have documented liability protection. Request the executed agreement from your advisor and confirm its scope covers investment selection and monitoring.`
+    });
+  } else {
+    findings.push({grade:gInv,
+      title:`Named fiduciary advisor provides documented committee protection`,
+      desc:`A named fiduciary advisor is documented in this plan's Schedule C. This is the strongest available protection for committee members — investment decision liability transfers from individuals to the named fiduciary by operation of ERISA, giving each committee member documented protection for investment decisions made under the advisor's oversight.`
+    });
+  }
+
+  // 3. DOL Audit Risk — specific and urgent
+  if(filing === 'late'){
+    findings.push({grade:gComp,
+      title:`Late Form 5500 filing is the #1 trigger for DOL audit selection`,
+      desc:`This plan's most recent Form 5500 was filed late. The DOL's enforcement division uses late filings as one of its primary criteria for selecting plans to audit. A DOL audit examines every aspect of plan administration — investments, fees, documentation, loans, distributions, and compliance testing. Plans selected for audit face significant time and legal costs regardless of outcome, and findings can result in penalties, excise taxes, and correction programs. Implementing a compliance calendar with a TPA-monitored filing deadline is the immediate corrective action.`
+    });
+  } else if(filing === 'amended'){
+    findings.push({grade:gComp,
+      title:`Amended Form 5500 filing signals administrative errors that attract DOL attention`,
+      desc:`This plan filed an amended Form 5500, indicating the original filing contained errors requiring correction. While filing an amendment is the correct action, it signals to the DOL's enforcement system that the plan's administrative process may have broader issues. Amended filings, particularly in consecutive years, are a secondary audit trigger. A compliance review of the plan's administrative procedures is recommended.`
+    });
+  }
+
+  // 4. Participation
+  if(gPart === 'F' || gPart === 'D'){
+    findings.push({grade:gPart,
+      title:`${Math.round((100-participation)/100*participants).toLocaleString()} eligible employees are not building retirement savings`,
+      desc:`A ${participation}% participation rate means roughly ${Math.round((100-participation)/100*participants).toLocaleString()} eligible employees are not contributing to this plan. Low participation is almost always a plan design problem — not a communication problem. Auto-enrollment at a 6% default deferral rate typically drives 15–25% participation improvement within 12 months without increasing employer cost. It is the single highest-return plan design change available.`
+    });
+  } else if(gPart === 'C'){
+    findings.push({grade:gPart,
+      title:`${Math.round((80-participation)/100*participants).toLocaleString()} more employees need to enroll to reach the 80% best-practice threshold`,
+      desc:`At ${participation}%, participation is below the 80% best-practice level. Auto-enrollment at a 6% default deferral — if not already in place — is the fastest path to closing this gap. Plans that implement it typically see measurable improvement within the first enrollment cycle.`
+    });
+  } else {
+    findings.push({grade:gPart,
+      title:`Participation rate of ${participation}% meets the best-practice threshold`,
+      desc:`Strong participation should be maintained through annual re-enrollment campaigns for non-participating eligible employees and monitoring of newly eligible employees. Auto-escalation, if not already in place, is the next lever for improving average deferral rates and long-term retirement readiness.`
+    });
+  }
+
+  // 5. Plan Design
+  if(gDesign === 'F' || gDesign === 'D'){
+    findings.push({grade:gDesign,
+      title:`Plan design is actively suppressing participation and employee retirement readiness`,
+      desc:`This plan ${match==='none'?'offers no employer match, one of the most effective recruiting and retention tools available':'offers a below-peer-median employer match that puts it at a competitive disadvantage in recruiting'}${autoEnroll==='none'?' and has no auto-enrollment feature in place':' and auto-enrollment is either inactive or set below the recommended 6% default'}. These two design elements together represent the highest-return improvements available to this plan — most sponsors see measurable improvement within 12 months and report improved employee satisfaction and retention.`
+    });
+  } else if(gDesign === 'C'){
+    findings.push({grade:gDesign,
+      title:`Plan design improvements are available that would meaningfully improve retirement readiness`,
+      desc:`The plan has some positive design elements but is missing features that would improve participant outcomes. Auto-escalation — automatically increasing deferrals by 1% annually up to a 10% cap — is the next step for improving long-term retirement readiness beyond initial enrollment.`
+    });
+  }
+
+  document.getElementById('rc-findings-list').innerHTML = findings.map(f=>`
+    <div class="rc-finding-row">
+      <div class="rc-finding-grade ${gradeClass(f.grade)}">${f.grade}</div>
+      <div class="rc-finding-text">
+        <div class="rc-finding-title">${f.title}</div>
+        <div class="rc-finding-desc">${f.desc}</div>
+      </div>
+    </div>`).join('');
+
+  // Email
+  const subject = buildSubject(co, gOverall, gFee, feeExcess, annualWaste, advisor, filing);
+  const body = buildEmail(co, type, admin, adminTitle, gOverall, gFee, feeBps, peerBps, feeExcess, annualWaste, gPart, participation, gInv, advisor, assets, participants, filing);
+  document.getElementById('ep-subject').textContent = subject;
+  document.getElementById('ep-body').textContent = body;
+
+  document.getElementById('report-wrap').style.display = 'block';
+  setTimeout(()=>document.getElementById('report-wrap').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+
+function buildSubject(co, overall, gFee, feeExcess, annualWaste, advisor, filing){
+  if(advisor === 'none') return `${co} — your committee may not know about this ERISA exposure`;
+  if(filing === 'late') return `${co} — your Form 5500 was filed late. Here's why that matters.`;
+  if(annualWaste > 50000) return `${co}'s plan is paying $${fmt(annualWaste)}/yr above peer plans`;
+  if(annualWaste > 0) return `${co} retirement plan — a number worth seeing`;
+  if(overall === 'D' || overall === 'F') return `${co} retirement plan report card — prepared for your review`;
+  return `${co} retirement plan — how it compares to peers`;
+}
+
+function buildEmail(co, type, admin, adminTitle, overall, gFee, feeBps, peerBps, feeExcess, annualWaste, gPart, participation, gInv, advisor, assets, participants, filing){
+  const closing = `\n\nRobert Delgado, CFA\nFirst Hill Trust — Retirement Services\n800.967.3709 · compliance@fhtretirement.com`;
+  const intro = admin && admin !== 'Plan Administrator' ? `Hi ${admin} —` : `Hi —`;
+
+  // Hook varies by most urgent issue
+  if(advisor === 'none'){
+    return `${intro}\n\nI came across ${co}'s ${type} through public DOL Form 5500 filings and wanted to share something that I think is worth knowing.\n\nYour plan currently has no investment advisor listed on Schedule C of its Form 5500. Under ERISA Section 409, that means each member of your investment committee is personally liable — out of their own personal assets — for any investment loss the plan suffers. Most committee members don't know this until it becomes a problem.\n\nI've put together a one-page report card for your plan grading it across five areas: fee exposure in dollars, personal liability coverage, DOL audit risk, participation rate, and plan design. It's based entirely on publicly available Form 5500 data — no assumptions, no estimates.\n\nI'm attaching it with no ask. If any of it prompts a question, I'm easy to reach. Takes about 20 minutes to walk through.${closing}`;
+  }
+
+  if(filing === 'late'){
+    return `${intro}\n\nI pulled ${co}'s Form 5500 from the DOL's public database and noticed the most recent filing was submitted late.\n\nI wanted to flag it because a late Form 5500 filing is the #1 criterion the DOL uses to select plans for audit. A DOL audit examines every aspect of plan administration — and regardless of what they find, the process itself is expensive and time-consuming for the company.\n\nI've put together a brief report card grading your plan across five areas including DOL audit risk, fee exposure, and personal liability coverage for committee members. It's attached — built from public data, no ask.\n\nIf it raises a question, I'm happy to talk through it.${closing}`;
+  }
+
+  if(annualWaste > 0 && (gFee === 'F' || gFee === 'D')){
+    return `${intro}\n\nI pulled ${co}'s most recent Form 5500 from the DOL's public database and wanted to share one number.\n\nYour plan's all-in cost is approximately ${feeBps} basis points. The peer median for ${type} plans of comparable size is ${peerBps} basis points. That difference is $${fmt(annualWaste)} per year — money that would otherwise be compounding in your employees' retirement accounts.\n\nI've put together a one-page report card for your plan grading it on fee exposure, personal liability risk, DOL audit exposure, participation rate, and plan design. It's attached. No pitch — just the data as it stands from public filings.\n\nIf the number I mentioned prompts a question, I'm happy to walk through it in 20 minutes.${closing}`;
+  }
+
+  if(gInv === 'D'){
+    return `${intro}\n\nI put together a retirement plan report card for ${co}'s ${type} using public Form 5500 data and wanted to share it.\n\nOne area that stood out: your current advisor is a bank or wirehouse, and most bank advisors have not signed a named fiduciary agreement with the plan. That means despite paying for advisory services, your committee members likely still carry full personal investment liability under ERISA. It's worth a 10-minute conversation with your current advisor to confirm whether a signed 3(21) or 3(38) agreement is actually in place.\n\nThe full report card is attached — graded across five areas including fee exposure in dollars, personal liability, and DOL audit risk.\n\nNo ask. Just thought it was worth sharing.${closing}`;
+  }
+
+  return `${intro}\n\nI put together a retirement plan report card for ${co}'s ${type} using publicly available Form 5500 data — thought it might be useful to have an outside view of how the plan compares to peers.\n\nThe report grades the plan on five dimensions: fee exposure in actual dollars, personal liability protection for committee members, DOL audit risk, participation rate, and plan design. All based on your public filings.\n\nI work with plan committees at First Hill Trust as a dedicated fiduciary advisor. This is not a sales pitch — just data I thought was worth sharing. If anything in the report card prompts a question, I'm happy to talk through it.${closing}`;
+}
+
+function copyEmail(){
+  const subject = document.getElementById('ep-subject').textContent;
+  const body = document.getElementById('ep-body').textContent;
+  const full = `Subject: ${subject}\n\n${body}`;
+  navigator.clipboard.writeText(full).then(()=>toast('Email copied to clipboard'));
+}
+
+function openPDF(){
+  toast('Opening print dialog — sel

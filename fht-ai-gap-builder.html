@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FHT — Retirement Plan Gap Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f1923;--ink-2:#2d3a4a;--ink-3:#5a6a7e;--ink-4:#8a98a8;
+  --border:#dde3eb;--border-2:#eaeff5;--bg:#f5f7fa;--surface:#fff;
+  --blue:#1565e8;--blue-lt:#eff3fd;
+  --green:#0d7a4e;--green-lt:#edf6f1;
+  --amber:#92530c;--amber-lt:#fef6ee;
+  --red:#b91c1c;--red-lt:#fef2f2;
+  --radius:8px;
+  --shadow:0 1px 3px rgba(15,25,35,.06),0 1px 2px rgba(15,25,35,.04);
+  --shadow-md:0 4px 20px rgba(15,25,35,.09);
+  --shadow-lg:0 8px 40px rgba(15,25,35,.13);
+}
+body{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+
+/* NAV */
+.topnav{background:#fff;border-bottom:1px solid var(--border);height:56px;padding:0 40px;display:flex;align-items:center;gap:24px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.logo-mark{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{fill:white;width:14px;height:14px;}
+.logo-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);line-height:1.1;}
+.logo-sub{font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.6px;}
+.nav-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;}
+.nav-links{display:flex;gap:2px;}
+.nav-link{background:none;border:none;padding:6px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.nav-link:hover{background:var(--bg);color:var(--ink);}
+.nav-link.active{background:var(--blue-lt);color:var(--blue);font-weight:600;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.user-pill{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border:1px solid var(--border);border-radius:20px;}
+.user-av{width:26px;height:26px;background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;}
+.user-name{font-size:12.5px;font-weight:500;color:var(--ink-2);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;padding:8px 18px;transition:all .12s;}
+.btn-primary{background:var(--blue);color:#fff;}.btn-primary:hover{background:#1254c5;}
+.btn-secondary{background:#fff;color:var(--ink-2);border:1px solid var(--border);}.btn-secondary:hover{border-color:var(--ink-3);}
+.btn-sm{padding:5px 13px;font-size:12px;}
+
+/* PAGE */
+.page{max-width:900px;margin:0 auto;padding:40px 32px 100px;}
+
+/* INTAKE MASTHEAD */
+.intake-masthead{margin-bottom:28px;}
+.intake-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-4);margin-bottom:8px;}
+.intake-title{font-family:'Fraunces',serif;font-size:32px;font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:12px;}
+.intake-sub{font-size:13.5px;color:var(--ink-3);line-height:1.65;max-width:600px;}
+
+/* HOW IT WORKS — grey numbered circles (fix #2) */
+.how-strip{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;align-items:stretch;gap:0;box-shadow:var(--shadow);}
+.how-step{flex:1;display:flex;flex-direction:column;gap:5px;padding:0 18px;}
+.how-step:first-child{padding-left:0;}
+.how-step:last-child{padding-right:0;}
+.how-step+.how-step{border-left:1px solid var(--border-2);}
+/* ★ fix #2: was blue, now light grey */
+.how-num{width:22px;height:22px;border-radius:50%;background:#E4E7ED;color:var(--ink-2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-bottom:3px;}
+.how-title{font-size:12.5px;font-weight:600;color:var(--ink-2);}
+.how-desc{font-size:12px;color:var(--ink-4);line-height:1.45;}
+
+/* CORE CALLOUT */
+.core-callout{background:var(--blue-lt);border:1px solid rgba(21,101,232,.18);border-radius:var(--radius);padding:13px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;}
+.cc-badge{background:var(--blue);color:#fff;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.cc-text{font-size:13px;color:var(--ink-3);line-height:1.5;}
+.cc-text strong{color:var(--ink-2);}
+
+/* PLAN ID */
+.id-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-bottom:24px;box-shadow:var(--shadow);}
+.id-card-title{font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);margin-bottom:14px;}
+.id-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.id-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field.full{grid-column:1/-1;}
+.field-lbl{font-size:11.5px;font-weight:600;color:var(--ink-3);}
+.field-inp{background:var(--bg);border:1.5px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13.5px;color:var(--ink);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .12s;}
+.field-inp:focus{border-color:var(--blue);background:#fff;}
+.field-sel{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%238a98a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+
+/* CATEGORY TABS */
+.cat-tabs-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);margin-bottom:10px;}
+.cat-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden;background:#fff;box-shadow:var(--shadow);}
+.cat-tab{flex:1;padding:11px 6px;font-size:12px;font-weight:500;color:var(--ink-3);cursor:pointer;border:none;background:transparent;font-family:'DM Sans',sans-serif;border-right:1px solid var(--border);transition:all .12s;text-align:center;line-height:1.35;}
+.cat-tab:last-child{border-right:none;}
+.cat-tab:hover{background:var(--bg);color:var(--ink-2);}
+.cat-tab.active{background:var(--blue-lt);color:var(--blue);font-weight:600;}
+.tab-prog{display:flex;align-items:center;justify-content:center;gap:3px;margin-top:4px;}
+.tab-prog-dot{width:5px;height:5px;border-radius:50%;background:var(--border);transition:background .2s;}
+.tab-prog-dot.answered{background:var(--green);}
+
+/* CAT PANELS */
+.cat-panel{display:none;background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;}
+.cat-panel.active{display:block;animation:fadeQ .18s ease;}
+@keyframes fadeQ{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.cat-panel-hdr{padding:15px 20px;border-bottom:1px solid var(--border-2);background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.cat-panel-title{font-size:13.5px;font-weight:600;color:var(--ink);}
+.cat-panel-sub{font-size:12px;color:var(--ink-4);margin-top:2px;}
+.core-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--blue);background:var(--blue-lt);padding:3px 10px;border-radius:3px;white-space:nowrap;flex-shrink:0;}
+
+/* SECTION DIVIDERS — ★ fix #1: removed time estimates */
+.q-section-divider{padding:9px 20px;background:var(--bg);border-bottom:1px solid var(--border-2);display:flex;align-items:center;gap:10px;}
+.q-section-divider-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);}
+.q-section-divider-line{flex:1;height:1px;background:var(--border-2);}
+
+/* QUESTIONS */
+.q-row{padding:15px 20px;border-bottom:1px solid var(--border-2);display:flex;align-items:flex-start;justify-content:space-between;gap:24px;}
+.q-row:last-of-type{border-bottom:none;}
+.q-row.optional-q{background:var(--bg);}
+.q-text{flex:1;}
+.q-label{font-size:13px;font-weight:500;color:var(--ink-2);line-height:1.45;margin-bottom:4px;}
+.q-rationale{font-size:11.5px;color:var(--ink-4);line-height:1.45;}
+.q-rationale strong{color:var(--ink-3);font-weight:600;}
+
+/* YES/NO/UNKNOWN */
+.q-toggle{display:flex;flex-shrink:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-top:2px;}
+.qt{padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;border:none;background:var(--bg);color:var(--ink-3);font-family:'DM Sans',sans-serif;border-right:1px solid var(--border);transition:all .1s;white-space:nowrap;}
+.qt:last-child{border-right:none;}
+.qt:hover{background:var(--border-2);color:var(--ink-2);}
+.qt.s-yes{background:var(--green-lt);color:var(--green);font-weight:600;}
+.qt.s-no{background:var(--red-lt);color:var(--red);font-weight:600;}
+.qt.s-unk{background:var(--amber-lt);color:var(--amber);font-weight:600;}
+
+/* ★ fix #3: Next category link at bottom of each panel */
+.next-cat-row{padding:13px 20px;border-top:1px solid var(--border-2);display:flex;align-items:center;justify-content:flex-end;background:var(--surface);}
+.next-cat-link{font-size:13px;font-weight:600;color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(21,101,232,.35);transition:color .12s;}
+.next-cat-link:hover{color:#1254c5;}
+
+/* SHOW MORE */
+.show-more-row{padding:11px 20px;border-top:1px solid var(--border-2);display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--bg);transition:background .12s;}
+.show-more-row:hover{background:#eaeff5;}
+.show-more-icon{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.show-more-icon svg{fill:none;stroke:var(--ink-4);stroke-width:2;stroke-linecap:round;width:10px;height:10px;transition:transform .15s;}
+.show-more-icon.open svg{transform:rotate(180deg);}
+.show-more-text{font-size:12.5px;font-weight:500;color:var(--blue);}
+.show-more-count{font-size:12px;color:var(--ink-4);}
+.optional-questions{display:none;}
+.optional-questions.open{display:block;}
+
+/* BUILD CTA */
+.build-cta{background:#f0f4fe;border:1px solid rgba(21,101,232,.18);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:4px;}
+.build-cta-text{font-size:13px;color:var(--ink-3);line-height:1.5;}
+.build-cta-text strong{color:var(--ink-2);}
+.build-btn{background:var(--blue);border:none;color:white;border-radius:var(--radius);padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:opacity .12s;white-space:nowrap;}
+.build-btn:hover{opacity:.88;}
+
+/* LOADING */
+.loading-cover{position:fixed;inset:0;background:rgba(245,247,250,.96);display:flex;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(4px);}
+.loading-cover.hidden{display:none;}
+.loading-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:44px 52px;text-align:center;width:400px;box-shadow:var(--shadow-lg);}
+.loading-title{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.loading-sub{font-size:13px;color:var(--ink-4);margin-bottom:26px;}
+.prog-track{height:2px;background:var(--border-2);border-radius:1px;overflow:hidden;margin-bottom:8px;}
+.prog-fill{height:100%;background:var(--blue);border-radius:1px;transition:width .3s ease;}
+.prog-step{font-size:12px;color:var(--ink-4);min-height:16px;}
+
+/* RESULTS */
+#results-wrap{display:none;}
+.results-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:20px;}
+.rh-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-4);margin-bottom:5px;}
+.rh-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.rh-meta{font-size:13px;color:var(--ink-4);}
+.rh-btns{display:flex;gap:8px;align-items:center;flex-shrink:0;padding-top:4px;}
+
+/* ★ fix #7: 4th tab — Saved Analyses */
+.view-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.vt{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;padding:10px 18px;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;}
+.vt:hover{color:var(--ink);}
+.vt.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600;}
+
+/* ══ EXEC SUMMARY — ★ fix #4: light grey header ══ */
+.exec-doc{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-md);}
+/* ★ was background:var(--ink) — now light grey */
+.ed-masthead{background:#EEF1F5;border-bottom:1px solid var(--border);padding:28px 36px;}
+.ed-mh-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.ed-mh-logo{display:flex;align-items:center;gap:8px;}
+.ed-mh-lm{width:22px;height:22px;background:var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.ed-mh-lm svg{fill:white;width:11px;height:11px;}
+.ed-mh-ln{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--ink-3);}
+.ed-mh-date{font-size:12px;color:var(--ink-4);}
+.ed-mh-title{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.ed-mh-sub{font-size:12.5px;color:var(--ink-3);}
+
+/* ══ PREMIUM SCORECARD ══ */
+/* Overall score hero */
+.sc-hero{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--border-2);}
+.sc-hero-left{padding:32px 28px;border-right:1px solid var(--border-2);display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);}
+.sc-grade-wrap{position:relative;width:120px;height:120px;margin-bottom:14px;}
+.sc-grade-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+.sc-ring-bg{fill:none;stroke:var(--border);stroke-width:9;}
+.sc-ring-fg{fill:none;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1s ease;}
+.sc-grade-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.sc-grade-num{font-family:'Fraunces',serif;font-size:34px;font-weight:700;line-height:1;letter-spacing:-1px;}
+.sc-grade-denom{font-size:12px;font-weight:600;color:var(--ink-4);margin-top:1px;letter-spacing:.5px;}
+.sc-risk-badge{font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.2px;}
+.sc-hero-right{padding:28px 26px;}
+.sc-hero-tagline{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-4);margin-bottom:16px;}
+
+/* Category score cards */
+.sc-cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:0;}
+.sc-cat-card{border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;background:#fff;position:relative;overflow:hidden;}
+.sc-cat-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;}
+.sc-cat-card.g::before{background:var(--green);}
+.sc-cat-card.a::before{background:var(--amber);}
+.sc-cat-card.r::before{background:var(--red);}
+.sc-cat-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.sc-cat-name{font-size:12px;font-weight:600;color:var(--ink-2);line-height:1.3;padding-left:8px;flex:1;}
+.sc-cat-score{font-family:'Fraunces',serif;font-size:20px;font-weight:700;line-height:1;flex-shrink:0;}
+.sc-cat-card.g .sc-cat-score{color:var(--green);}
+.sc-cat-card.a .sc-cat-score{color:var(--amber);}
+.sc-cat-card.r .sc-cat-score{color:var(--red);}
+.sc-cat-bar-outer{height:4px;background:var(--border-2);border-radius:2px;overflow:hidden;margin-left:8px;}
+.sc-cat-bar-fill{height:100%;border-radius:2px;}
+.sc-cat-card.g .sc-cat-bar-fill{background:var(--green);}
+.sc-cat-card.a .sc-cat-bar-fill{background:var(--amber);}
+.sc-cat-card.r .sc-cat-bar-fill{background:var(--red);}
+.sc-cat-gaps{font-size:11px;color:var(--ink-4);margin-top:5px;padding-left:8px;}
+
+/* Findings strip */
+.sc-findings{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border-2);}
+.sc-finding{padding:18px 20px;border-right:1px solid var(--border-2);position:relative;}
+.sc-finding:last-child{border-right:none;}
+.sc-finding-num{font-family:'Fraunces',serif;font-size:32px;font-weight:700;line-height:1;margin-bottom:4px;}
+.sc-finding-lbl{font-size:11.5px;color:var(--ink-4);line-height:1.4;}
+.sc-finding-bar{position:absolute;bottom:0;left:0;right:0;height:3px;}
+
+/* Legend + note */
+.ed-legend{padding:12px 24px;background:var(--bg);border-bottom:1px solid var(--border-2);display:flex;align-items:center;gap:24px;}
+.ed-legend-ttl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);}
+.ed-legend-item{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-3);}
+.ed-lm{font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;}
+.ed-advisor-note{margin:16px 28px 0;padding:12px 16px;background:var(--blue-lt);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;}
+.ed-an-text{font-size:13px;color:var(--ink-3);line-height:1.6;}
+.ed-an-text strong{color:var(--ink-2);}
+.ed-gap-table{padding:20px 28px;}
+.ed-gap-ttl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);margin-bottom:12px;}
+.gap-inv-table{width:100%;border-collapse:collapse;}
+.gap-inv-table th{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);padding:8px 14px;border-bottom:1px solid var(--border);text-align:left;background:var(--bg);}
+.gap-inv-table td{font-size:13px;padding:10px 14px;border-bottom:1px solid var(--border-2);color:var(--ink-3);vertical-align:top;}
+.gap-inv-table tr:last-child td{border-bottom:none;}
+.gap-inv-table td:first-child{font-weight:600;color:var(--ink-2);}
+
+.risk-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:3px;}
+.risk-pill.High{background:var(--red-lt);color:var(--red);}
+.risk-pill.Medium{background:var(--amber-lt);color:var(--amber);}
+.risk-pill.Low{background:var(--green-lt);color:var(--green);}
+.rp-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;}
+.risk-pill.High .rp-dot{background:var(--red);}
+.risk-pill.Medium .rp-dot{background:var(--amber);}
+.risk-pill.Low .rp-dot{background:var(--green);}
+.conf-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;}
+.conf-tag.confirmed{background:var(--red-lt);color:var(--red);}
+.conf-tag.probable{background:var(--bg);color:var(--ink-4);border:1px dashed var(--border);}
+
+/* GAP DETAIL */
+.gap-cat-block{margin-bottom:26px;}
+.gcb-hdr{display:flex;align-items:baseline;justify-content:space-between;padding-bottom:9px;border-bottom:2px solid var(--ink);margin-bottom:12px;}
+.gcb-title{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--ink);}
+.gcb-meta{font-size:12px;color:var(--ink-4);}
+.gap-item{background:#fff;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:7px;overflow:hidden;}
+.gi-hdr{padding:13px 17px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .1s;}
+.gi-hdr:hover{background:var(--bg);}
+.gi-bar{width:3px;height:34px;border-radius:2px;flex-shrink:0;}
+.gi-bar.High{background:var(--red);}
+.gi-bar.Medium{background:var(--amber);}
+.gi-bar.Low{background:var(--green);}
+.gi-info{flex:1;}
+.gi-area{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.2;}
+.gi-practice{font-size:12px;color:var(--ink-4);margin-top:1px;}
+.gi-meta{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.gi-chev{width:18px;height:18px;color:var(--ink-4);display:flex;align-items:center;justify-content:center;transition:transform .15s;flex-shrink:0;}
+.gi-chev.open{transform:rotate(180deg);}
+.gi-chev svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;width:11px;height:11px;}
+.gi-body{display:none;padding:0 17px 16px;}
+.gi-body.open{display:block;}
+.gi-inner{border-top:1px solid var(--border-2);padding-top:14px;}
+.insight-box{border-left:3px solid var(--blue);background:var(--blue-lt);border-radius:0 6px 6px 0;padding:11px 15px;margin-bottom:12px;}
+.insight-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--blue);margin-bottom:4px;}
+.insight-txt{font-size:13px;color:var(--ink-3);line-height:1.6;}
+.probable-box{border-left:3px solid var(--border);background:var(--bg);border-radius:0 6px 6px 0;padding:11px 15px;margin-bottom:12px;}
+.probable-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);margin-bottom:4px;}
+.verify-box{border-left:3px solid var(--amber);background:var(--amber-lt);border-radius:0 6px 6px 0;padding:11px 15px;margin-bottom:12px;}
+.verify-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--amber);margin-bottom:4px;}
+.verify-txt{font-size:13px;color:var(--ink-3);line-height:1.6;}
+.gi-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.gi-field label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);display:block;margin-bottom:5px;}
+.gi-field-val{font-size:13px;color:var(--ink-3);line-height:1.5;}
+.risk-sel{border:1.5px solid var(--border);border-radius:5px;padding:5px 10px;font-size:12.5px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer;background:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 3l3 4 3-4' stroke='%238a98a8' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:22px;}
+.risk-sel.High{border-color:var(--red);color:var(--red);}
+.risk-sel.Medium{border-color:var(--amber);color:var(--amber);}
+.risk-sel.Low{border-color:var(--green);color:var(--green);}
+.action-field label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);display:block;margin-bottom:5px;}
+.action-ta{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink-2);outline:none;resize:none;line-height:1.55;}
+.action-ta:focus{border-color:var(--blue);}
+
+/* ══ PROPOSAL — ★ fix #4: light grey cover ══ */
+.proposal-doc{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-md);}
+/* ★ was background:var(--ink) — now light grey */
+.pd-cover{background:#EEF1F5;border-bottom:1px solid var(--border);padding:36px 44px;}
+.pd-cv-logo{display:flex;align-items:center;gap:9px;margin-bottom:24px;}
+.pd-cv-lm{width:22px;height:22px;background:var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.pd-cv-lm svg{fill:white;width:11px;height:11px;}
+.pd-cv-ln{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--ink-3);}
+.pd-cv-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-4);margin-bottom:8px;}
+.pd-cv-title{font-family:'Fraunces',serif;font-size:25px;font-weight:700;color:var(--ink);margin-bottom:5px;line-height:1.2;}
+.pd-cv-sub{font-size:13.5px;color:var(--ink-3);margin-bottom:24px;}
+.pd-cv-meta{display:flex;gap:32px;flex-wrap:wrap;}
+.pd-cv-mi{display:flex;flex-direction:column;gap:3px;}
+.pd-cv-ml{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-4);}
+.pd-cv-mv{font-size:13px;color:var(--ink-2);font-weight:500;}
+
+.pd-sec{padding:26px 40px;border-bottom:1px solid var(--border-2);}
+.pd-sec:last-child{border-bottom:none;}
+.pd-sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-4);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.pd-sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-2);}
+.pd-sec-title{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:10px;}
+
+/* ★ fix #8: editable proposal text */
+.pd-text{font-size:13.5px;color:var(--ink-3);line-height:1.85;white-space:pre-wrap;outline:none;min-height:40px;border-radius:4px;transition:background .12s;padding:4px 6px;margin:-4px -6px;}
+.pd-text:focus{background:var(--blue-lt);}
+.pd-text:empty:before{content:attr(data-placeholder);color:var(--ink-4);}
+
+/* ★ fix #9: NAMED FIDUCIARY COVERAGE etc — bold section labels */
+.pd-scope-block{margin-bottom:14px;}
+.pd-scope-block:last-child{margin-bottom:0;}
+.pd-scope-lbl{font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:4px;letter-spacing:.1px;}
+.pd-scope-text{font-size:13.5px;color:var(--ink-3);line-height:1.8;}
+
+.pd-gap{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--border-2);}
+.pd-gap:last-child{border-bottom:none;}
+.pd-gap-bar{width:3px;border-radius:2px;flex-shrink:0;min-height:38px;}
+.pd-gap-bar.High{background:var(--red);}
+.pd-gap-bar.Medium{background:var(--amber);}
+.pd-gap-area{font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:3px;}
+.pd-gap-action{font-size:13px;color:var(--ink-3);line-height:1.6;}
+
+.pd-step{display:flex;gap:13px;padding:10px 0;border-bottom:1px solid var(--border-2);}
+.pd-step:last-child{border-bottom:none;}
+/* ★ fix #5: grey step numbers not black */
+.pd-step-num{width:24px;height:24px;border-radius:50%;background:#E4E7ED;color:var(--ink-2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.pd-step-txt{font-size:13.5px;color:var(--ink-3);line-height:1.55;}
+.pd-step-txt strong{color:var(--ink-2);}
+
+/* ★ fix #5: light grey step buttons */
+.pd-step-btn{display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:4px 12px;border:1px solid var(--border);border-radius:5px;font-size:12px;font-weight:500;color:var(--ink-3);background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;}
+.pd-step-btn:hover{border-color:var(--ink-3);color:var(--ink-2);}
+
+/* Editable hint */
+.edit-hint{font-size:11px;color:var(--ink-4);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.edit-hint-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+
+/* Saved Analyses tab content */
+.saved-empty{padding:60px 20px;text-align:center;}
+.saved-empty-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.saved-empty-sub{font-size:13.5px;color:var(--ink-4);line-height:1.65;max-width:360px;margin:0 auto;}
+
+/* BOTTOM BAR — light grey */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#f0f2f5;border-top:1px solid var(--border);padding:10px 40px;display:flex;align-items:center;justify-content:space-between;z-index:80;}
+.bb-info{font-size:12.5px;color:var(--ink-3);}
+.bb-info strong{color:var(--ink-2);}
+.bb-btns{display:flex;gap:8px;}
+
+#toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 22px;border-radius:6px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;z-index:999;transition:opacity .2s;white-space:nowrap;box-shadow:var(--shadow-md);}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- LOADING -->
+<div class="loading-cover hidden" id="loadCover">
+  <div class="loading-box">
+    <div class="loading-title">Analyzing plan data</div>
+    <div class="loading-sub">Building your fiduciary gap analysis</div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="prog-step" id="prog-step"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="topnav">
+  <a class="logo" href="#">
+    <div class="logo-mark"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v8l7 4 7-4V6L10 2zm0 2.3l5 2.8v6.4l-5 2.8-5-2.8V7.1l5-2.8z"/></svg></div>
+    <div><div class="logo-name">First Hill Trust</div><div class="logo-sub">Retirement Services</div></div>
+  </a>
+  <div class="nav-sep"></div>
+  <div class="nav-links">
+    <button class="nav-link">Dashboard</button>
+    <button class="nav-link">Plan Prospector</button>
+    <button class="nav-link active">Retirement Plan Gap Analysis</button>
+  </div>
+  <div class="nav-right">
+    <div class="user-pill">
+      <div class="user-av">RD</div>
+      <div class="user-name">Robert Delgado</div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ══ INTAKE ══ -->
+<div id="intake-wrap">
+
+  <div class="intake-masthead">
+    <div class="intake-eyebrow">Advisor Tool</div>
+    <div class="intake-title"><strong>Retirement Plan Gap Analysis</strong></div>
+    <div class="intake-sub">Enter plan details and work through the assessment categories. Each category has a short set of core questions — sufficient to build a complete, accurate gap analysis on their own. Additional questions are available inside each category for a deeper assessment.</div>
+  </div>
+
+  <div class="how-strip">
+    <div class="how-step"><div class="how-num">1</div><div class="how-title">Enter plan details</div><div class="how-desc">Company name, plan type, assets, recordkeeper, and primary contact.</div></div>
+    <div class="how-step"><div class="how-num">2</div><div class="how-title">Answer the core questions</div><div class="how-desc">12 questions across 5 categories. Yes, No, or Unknown.</div></div>
+    <div class="how-step"><div class="how-num">3</div><div class="how-title">Build the analysis</div><div class="how-desc">The AI classifies every gap as confirmed or probable and writes recommended actions.</div></div>
+    <div class="how-step"><div class="how-num">4</div><div class="how-title">Generate the proposal</div><div class="how-desc">One click produces an executive summary and a full fiduciary advisory proposal.</div></div>
+  </div>
+
+  <div class="core-callout">
+    <div class="cc-badge">12 core questions</div>
+    <div class="cc-text"><strong>These are all you need.</strong> The 12 core questions across the five categories below are sufficient to build a complete, accurate gap analysis and proposal. Additional questions inside each category are entirely optional.</div>
+  </div>
+
+  <div class="id-card">
+    <div class="id-card-title">Plan identification</div>
+    <div class="id-grid-3" style="margin-bottom:12px;">
+      <div class="field full"><div class="field-lbl">Company name</div><input class="field-inp" id="i-co" type="text" placeholder="e.g. Westfield Industrial Group"/></div>
+    </div>
+    <div class="id-grid-3" style="margin-bottom:12px;">
+      <div class="field"><div class="field-lbl">Plan type</div><select class="field-inp field-sel" id="i-type"><option>401(k)</option><option>403(b)</option><option>DB Pension</option><option>SIMPLE IRA</option></select></div>
+      <div class="field"><div class="field-lbl">Estimated plan assets</div><input class="field-inp" id="i-assets" type="text" placeholder="e.g. $22M"/></div>
+      <div class="field"><div class="field-lbl">Recordkeeper</div><input class="field-inp" id="i-rk" type="text" placeholder="e.g. Empower, Fidelity"/></div>
+    </div>
+    <div class="id-grid-2">
+      <div class="field"><div class="field-lbl">Primary contact name</div><input class="field-inp" id="i-contact" type="text" placeholder="e.g. Sarah Kolb"/></div>
+      <div class="field"><div class="field-lbl">Title</div><input class="field-inp" id="i-ctitle" type="text" placeholder="e.g. HR Director"/></div>
+    </div>
+  </div>
+
+  <div class="cat-tabs-label">Assessment categories</div>
+  <div class="cat-tabs" id="cat-tabs">
+    <button class="cat-tab active" onclick="switchCat('fiduciary',this)">Fiduciary Oversight<div class="tab-prog" id="tp-fiduciary"><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div></div></button>
+    <button class="cat-tab" onclick="switchCat('admin',this)">Administration &amp; Operations<div class="tab-prog" id="tp-admin"><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div></div></button>
+    <button class="cat-tab" onclick="switchCat('investment',this)">Investment Oversight<div class="tab-prog" id="tp-investment"><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div></div></button>
+    <button class="cat-tab" onclick="switchCat('outcomes',this)">Participant Outcomes<div class="tab-prog" id="tp-outcomes"><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div><div class="tab-prog-dot"></div></div></button>
+    <button class="cat-tab" onclick="switchCat('cyber',this)">Technology &amp; Cybersecurity<div class="tab-prog" id="tp-cyber"><div class="tab-prog-dot"></div></div></button>
+  </div>
+
+  <!-- FIDUCIARY -->
+  <div class="cat-panel active" id="panel-fiduciary">
+    <div class="cat-panel-hdr"><div><div class="cat-panel-title">Fiduciary Oversight</div><div class="cat-panel-sub">Three core questions — sufficient for a complete analysis.</div></div><div class="core-label">3 core questions</div></div>
+    <div class="q-section-divider"><div class="q-section-divider-label">Core questions</div><div class="q-section-divider-line"></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Has the plan's investment advisor signed a named fiduciary agreement — a 3(21) co-fiduciary acknowledgement or 3(38) investment management agreement?</div><div class="q-rationale"><strong>Why this matters:</strong> Most bank and wirehouse advisors have never signed one. Without it, 100% of investment liability stays with the committee personally.</div></div><div class="q-toggle" id="qt-fid"><button class="qt" onclick="tog('fid','yes',this,'fiduciary',0)">Yes</button><button class="qt" onclick="tog('fid','no',this,'fiduciary',0)">No</button><button class="qt" onclick="tog('fid','unk',this,'fiduciary',0)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Does the committee have signed meeting minutes from each of the last four quarters?</div><div class="q-rationale"><strong>Why this matters:</strong> Signed minutes are the primary evidence of a prudent process. Without them the committee cannot defend any investment decision it has made.</div></div><div class="q-toggle" id="qt-min"><button class="qt" onclick="tog('min','yes',this,'fiduciary',1)">Yes</button><button class="qt" onclick="tog('min','no',this,'fiduciary',1)">No</button><button class="qt" onclick="tog('min','unk',this,'fiduciary',1)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Have all committee members completed documented fiduciary training in the last 12 months?</div><div class="q-rationale"><strong>Why this matters:</strong> ERISA holds committee members to the prudent expert standard. Annual training with written acknowledgement is the documented evidence each member is working to meet it.</div></div><div class="q-toggle" id="qt-train"><button class="qt" onclick="tog('train','yes',this,'fiduciary',2)">Yes</button><button class="qt" onclick="tog('train','no',this,'fiduciary',2)">No</button><button class="qt" onclick="tog('train','unk',this,'fiduciary',2)">Unknown</button></div></div>
+    <div class="show-more-row" onclick="toggleOptional('fiduciary-opt',this)"><div class="show-more-icon" id="icon-fiduciary-opt"><svg viewBox="0 0 10 10"><path d="M2 3l3 4 3-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="show-more-text">Additional questions</div><div class="show-more-count">— 3 more for deeper coverage</div></div>
+    <div class="optional-questions" id="fiduciary-opt">
+      <div class="q-section-divider"><div class="q-section-divider-label">Additional — optional</div><div class="q-section-divider-line"></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Does the committee have a formal written charter defining its membership, responsibilities, quorum, and meeting schedule?</div><div class="q-rationale"><strong>Why this matters:</strong> A committee charter defines who has fiduciary authority and how it is exercised. Without it the committee's legal structure is informal and potentially ambiguous.</div></div><div class="q-toggle" id="qt-charter"><button class="qt" onclick="tog('charter','yes',this,'fiduciary',3)">Yes</button><button class="qt" onclick="tog('charter','no',this,'fiduciary',3)">No</button><button class="qt" onclick="tog('charter','unk',this,'fiduciary',3)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Has the committee conducted a formal due diligence review of all service providers in the last 24 months?</div><div class="q-rationale"><strong>Why this matters:</strong> ERISA requires ongoing monitoring of service providers, not just initial selection. A documented review demonstrates active oversight.</div></div><div class="q-toggle" id="qt-spmon"><button class="qt" onclick="tog('spmon','yes',this,'fiduciary',4)">Yes</button><button class="qt" onclick="tog('spmon','no',this,'fiduciary',4)">No</button><button class="qt" onclick="tog('spmon','unk',this,'fiduciary',4)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Is there a process for identifying and managing conflicts of interest among committee members and service providers?</div><div class="q-rationale"><strong>Why this matters:</strong> ERISA's prohibited transaction rules require disclosure and management of conflicts. An undisclosed conflict can void an otherwise prudent decision.</div></div><div class="q-toggle" id="qt-conflict"><button class="qt" onclick="tog('conflict','yes',this,'fiduciary',5)">Yes</button><button class="qt" onclick="tog('conflict','no',this,'fiduciary',5)">No</button><button class="qt" onclick="tog('conflict','unk',this,'fiduciary',5)">Unknown</button></div></div>
+    </div>
+    <!-- ★ fix #3: next category link -->
+    <div class="next-cat-row"><span class="next-cat-link" onclick="switchCat('admin',document.querySelector('[onclick*=\'admin\']'))">Next: Administration &amp; Operations →</span></div>
+  </div>
+
+  <!-- ADMINISTRATION -->
+  <div class="cat-panel" id="panel-admin">
+    <div class="cat-panel-hdr"><div><div class="cat-panel-title">Administration &amp; Operations</div><div class="cat-panel-sub">Four core questions covering the most common DOL audit triggers.</div></div><div class="core-label">4 core questions</div></div>
+    <div class="q-section-divider"><div class="q-section-divider-label">Core questions</div><div class="q-section-divider-line"></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Was the most recent Form 5500 filed on time with no late or amended filings?</div><div class="q-rationale"><strong>Why this matters:</strong> A late or amended 5500 is the #1 trigger for DOL audit selection. Verify on DOL EFAST2 — do not rely on verbal confirmation.</div></div><div class="q-toggle" id="qt-5500"><button class="qt" onclick="tog('5500','yes',this,'admin',0)">Yes</button><button class="qt" onclick="tog('5500','no',this,'admin',0)">No</button><button class="qt" onclick="tog('5500','unk',this,'admin',0)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Is there a fidelity bond covering at least 10% of plan assets currently in force?</div><div class="q-rationale"><strong>Why this matters:</strong> Legally required under ERISA Section 412. Operating without one is a current statutory violation. Request the certificate of insurance — not verbal confirmation.</div></div><div class="q-toggle" id="qt-bond"><button class="qt" onclick="tog('bond','yes',this,'admin',1)">Yes</button><button class="qt" onclick="tog('bond','no',this,'admin',1)">No</button><button class="qt" onclick="tog('bond','unk',this,'admin',1)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Has a formal, documented fee benchmarking study been completed in the last 24 months?</div><div class="q-rationale"><strong>Why this matters:</strong> ERISA's duty of loyalty requires all fees to be reasonable. Without a documented study the committee has no defense against an excessive fee claim.</div></div><div class="q-toggle" id="qt-bench"><button class="qt" onclick="tog('bench','yes',this,'admin',2)">Yes</button><button class="qt" onclick="tog('bench','no',this,'admin',2)">No</button><button class="qt" onclick="tog('bench','unk',this,'admin',2)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Is the plan's all-in cost estimated above 0.75% of assets based on the 408(b)(2) disclosure?</div><div class="q-rationale"><strong>Why this matters:</strong> The peer median for plans $10M–$100M is approximately 0.62%. Above 0.75% creates demonstrable excessive fee exposure with quantifiable participant harm.</div></div><div class="q-toggle" id="qt-fee"><button class="qt" onclick="tog('fee','yes',this,'admin',3)">Yes</button><button class="qt" onclick="tog('fee','no',this,'admin',3)">No</button><button class="qt" onclick="tog('fee','unk',this,'admin',3)">Unknown</button></div></div>
+    <div class="show-more-row" onclick="toggleOptional('admin-opt',this)"><div class="show-more-icon" id="icon-admin-opt"><svg viewBox="0 0 10 10"><path d="M2 3l3 4 3-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="show-more-text">Additional questions</div><div class="show-more-count">— 4 more for deeper coverage</div></div>
+    <div class="optional-questions" id="admin-opt">
+      <div class="q-section-divider"><div class="q-section-divider-label">Additional — optional</div><div class="q-section-divider-line"></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Has the plan document been restated within the last 6 years with all amendments adopted timely?</div><div class="q-rationale"><strong>Why this matters:</strong> An outdated plan document can disqualify the plan and result in significant tax liability for participants and the employer.</div></div><div class="q-toggle" id="qt-plandoc"><button class="qt" onclick="tog('plandoc','yes',this,'admin',4)">Yes</button><button class="qt" onclick="tog('plandoc','no',this,'admin',4)">No</button><button class="qt" onclick="tog('plandoc','unk',this,'admin',4)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Has a current Summary Plan Description been distributed to all participants within the required timeframe?</div><div class="q-rationale"><strong>Why this matters:</strong> Distributing the SPD is ERISA-mandated. Failure to distribute creates participant claims exposure and DOL penalties.</div></div><div class="q-toggle" id="qt-spd"><button class="qt" onclick="tog('spd','yes',this,'admin',5)">Yes</button><button class="qt" onclick="tog('spd','no',this,'admin',5)">No</button><button class="qt" onclick="tog('spd','unk',this,'admin',5)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Has annual ADP/ACP discrimination testing been completed on time with corrective distributions made within the required deadline?</div><div class="q-rationale"><strong>Why this matters:</strong> Missed testing deadlines result in mandatory excise taxes and can disqualify the plan.</div></div><div class="q-toggle" id="qt-testing"><button class="qt" onclick="tog('testing','yes',this,'admin',6)">Yes</button><button class="qt" onclick="tog('testing','no',this,'admin',6)">No</button><button class="qt" onclick="tog('testing','unk',this,'admin',6)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Have all revenue sharing arrangements been reviewed, documented, and either justified or eliminated?</div><div class="q-rationale"><strong>Why this matters:</strong> Undisclosed revenue sharing is one of the most common elements of ERISA excessive compensation claims.</div></div><div class="q-toggle" id="qt-revshare"><button class="qt" onclick="tog('revshare','yes',this,'admin',7)">Yes</button><button class="qt" onclick="tog('revshare','no',this,'admin',7)">No</button><button class="qt" onclick="tog('revshare','unk',this,'admin',7)">Unknown</button></div></div>
+    </div>
+    <div class="next-cat-row"><span class="next-cat-link" onclick="switchCat('investment',document.querySelector('[onclick*=\'investment\']'))">Next: Investment Oversight →</span></div>
+  </div>
+
+  <!-- INVESTMENT -->
+  <div class="cat-panel" id="panel-investment">
+    <div class="cat-panel-hdr"><div><div class="cat-panel-title">Investment Oversight</div><div class="cat-panel-sub">Two core questions identify the most common investment process failures.</div></div><div class="core-label">2 core questions</div></div>
+    <div class="q-section-divider"><div class="q-section-divider-label">Core questions</div><div class="q-section-divider-line"></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Is there a current, signed Investment Policy Statement on file?</div><div class="q-rationale"><strong>Why this matters:</strong> The IPS is the foundational document of a prudent investment process. Without one, every fund decision is legally indefensible — there is no written standard to evaluate it against.</div></div><div class="q-toggle" id="qt-ips"><button class="qt" onclick="tog('ips','yes',this,'investment',0)">Yes</button><button class="qt" onclick="tog('ips','no',this,'investment',0)">No</button><button class="qt" onclick="tog('ips','unk',this,'investment',0)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Has the fund lineup been formally reviewed and benchmarked against peers in the last 12 months?</div><div class="q-rationale"><strong>Why this matters:</strong> ERISA requires ongoing monitoring — not just initial fund selection. Documented quarterly reviews are the evidence the committee is actively exercising prudent oversight.</div></div><div class="q-toggle" id="qt-fundreview"><button class="qt" onclick="tog('fundreview','yes',this,'investment',1)">Yes</button><button class="qt" onclick="tog('fundreview','no',this,'investment',1)">No</button><button class="qt" onclick="tog('fundreview','unk',this,'investment',1)">Unknown</button></div></div>
+    <div class="show-more-row" onclick="toggleOptional('investment-opt',this)"><div class="show-more-icon" id="icon-investment-opt"><svg viewBox="0 0 10 10"><path d="M2 3l3 4 3-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="show-more-text">Additional questions</div><div class="show-more-count">— 3 more for deeper coverage</div></div>
+    <div class="optional-questions" id="investment-opt">
+      <div class="q-section-divider"><div class="q-section-divider-label">Additional — optional</div><div class="q-section-divider-line"></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Is there a formally designated QDIA meeting DOL safe harbor requirements with proper participant notice?</div><div class="q-rationale"><strong>Why this matters:</strong> Without proper QDIA designation and notice, the committee retains liability for all participants who default into the plan without making an investment election.</div></div><div class="q-toggle" id="qt-qdia"><button class="qt" onclick="tog('qdia','yes',this,'investment',2)">Yes</button><button class="qt" onclick="tog('qdia','no',this,'investment',2)">No</button><button class="qt" onclick="tog('qdia','unk',this,'investment',2)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Has the fund lineup been reviewed for lower-cost institutional share class alternatives?</div><div class="q-rationale"><strong>Why this matters:</strong> Failure to use the lowest-cost available share class is a common element of ERISA excessive fee lawsuits.</div></div><div class="q-toggle" id="qt-shareclass"><button class="qt" onclick="tog('shareclass','yes',this,'investment',3)">Yes</button><button class="qt" onclick="tog('shareclass','no',this,'investment',3)">No</button><button class="qt" onclick="tog('shareclass','unk',this,'investment',3)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Is there a formal watch list process for underperforming funds with documented criteria for replacement?</div><div class="q-rationale"><strong>Why this matters:</strong> Without documented watch list criteria, the committee has no framework for demonstrating active, prudent management of the investment menu.</div></div><div class="q-toggle" id="qt-watchlist"><button class="qt" onclick="tog('watchlist','yes',this,'investment',4)">Yes</button><button class="qt" onclick="tog('watchlist','no',this,'investment',4)">No</button><button class="qt" onclick="tog('watchlist','unk',this,'investment',4)">Unknown</button></div></div>
+    </div>
+    <div class="next-cat-row"><span class="next-cat-link" onclick="switchCat('outcomes',document.querySelector('[onclick*=\'outcomes\']'))">Next: Participant Outcomes →</span></div>
+  </div>
+
+  <!-- PARTICIPANT OUTCOMES -->
+  <div class="cat-panel" id="panel-outcomes">
+    <div class="cat-panel-hdr"><div><div class="cat-panel-title">Participant Outcomes</div><div class="cat-panel-sub">Three core questions identify the plan design gaps that most directly harm retirement readiness.</div></div><div class="core-label">3 core questions</div></div>
+    <div class="q-section-divider"><div class="q-section-divider-label">Core questions</div><div class="q-section-divider-line"></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Is the plan's current participation rate below 80%?</div><div class="q-rationale"><strong>Why this matters:</strong> 80% is the ERISA best-practice threshold. Low participation is almost always a plan design problem — correctable through auto-enrollment.</div></div><div class="q-toggle" id="qt-part"><button class="qt" onclick="tog('part','yes',this,'outcomes',0)">Yes</button><button class="qt" onclick="tog('part','no',this,'outcomes',0)">No</button><button class="qt" onclick="tog('part','unk',this,'outcomes',0)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Is the employer match absent or below the industry peer median of approximately 50% of the first 6% of salary?</div><div class="q-rationale"><strong>Why this matters:</strong> A below-median match suppresses participation and deferral rates and creates a recruiting disadvantage.</div></div><div class="q-toggle" id="qt-match"><button class="qt" onclick="tog('match','yes',this,'outcomes',1)">Yes</button><button class="qt" onclick="tog('match','no',this,'outcomes',1)">No</button><button class="qt" onclick="tog('match','unk',this,'outcomes',1)">Unknown</button></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Is auto-enrollment inactive or set at a default deferral rate below 6%?</div><div class="q-rationale"><strong>Why this matters:</strong> Plans with auto-enrollment at 6% consistently show 15–25% higher participation. Without it, improvement relies entirely on voluntary employee action.</div></div><div class="q-toggle" id="qt-auto"><button class="qt" onclick="tog('auto','yes',this,'outcomes',2)">Yes</button><button class="qt" onclick="tog('auto','no',this,'outcomes',2)">No</button><button class="qt" onclick="tog('auto','unk',this,'outcomes',2)">Unknown</button></div></div>
+    <div class="show-more-row" onclick="toggleOptional('outcomes-opt',this)"><div class="show-more-icon" id="icon-outcomes-opt"><svg viewBox="0 0 10 10"><path d="M2 3l3 4 3-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="show-more-text">Additional questions</div><div class="show-more-count">— 3 more for deeper coverage</div></div>
+    <div class="optional-questions" id="outcomes-opt">
+      <div class="q-section-divider"><div class="q-section-divider-label">Additional — optional</div><div class="q-section-divider-line"></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Is auto-escalation in place — automatically increasing deferrals by 1% annually up to a 10% cap?</div><div class="q-rationale"><strong>Why this matters:</strong> Most participants set a deferral rate at enrollment and never increase it. Auto-escalation is the most effective mechanism for improving retirement readiness beyond initial enrollment.</div></div><div class="q-toggle" id="qt-escalate"><button class="qt" onclick="tog('escalate','yes',this,'outcomes',3)">Yes</button><button class="qt" onclick="tog('escalate','no',this,'outcomes',3)">No</button><button class="qt" onclick="tog('escalate','unk',this,'outcomes',3)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Does the plan provide an annual financial wellness program with personalized retirement readiness reporting?</div><div class="q-rationale"><strong>Why this matters:</strong> Participants who understand their retirement readiness are significantly more likely to increase their deferral rate.</div></div><div class="q-toggle" id="qt-wellness"><button class="qt" onclick="tog('wellness','yes',this,'outcomes',4)">Yes</button><button class="qt" onclick="tog('wellness','no',this,'outcomes',4)">No</button><button class="qt" onclick="tog('wellness','unk',this,'outcomes',4)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Are pre-retirement counseling and distribution options clearly communicated to participants approaching retirement age?</div><div class="q-rationale"><strong>Why this matters:</strong> Poor distribution counseling results in suboptimal tax decisions and is an increasing source of participant complaints and litigation.</div></div><div class="q-toggle" id="qt-distrib"><button class="qt" onclick="tog('distrib','yes',this,'outcomes',5)">Yes</button><button class="qt" onclick="tog('distrib','no',this,'outcomes',5)">No</button><button class="qt" onclick="tog('distrib','unk',this,'outcomes',5)">Unknown</button></div></div>
+    </div>
+    <div class="next-cat-row"><span class="next-cat-link" onclick="switchCat('cyber',document.querySelector('[onclick*=\'cyber\']'))">Next: Technology &amp; Cybersecurity →</span></div>
+  </div>
+
+  <!-- CYBERSECURITY -->
+  <div class="cat-panel" id="panel-cyber">
+    <div class="cat-panel-hdr"><div><div class="cat-panel-title">Technology &amp; Cybersecurity</div><div class="cat-panel-sub">One core question covers the most universal cybersecurity gap.</div></div><div class="core-label">1 core question</div></div>
+    <div class="q-section-divider"><div class="q-section-divider-label">Core question</div><div class="q-section-divider-line"></div></div>
+    <div class="q-row"><div class="q-text"><div class="q-label">Does the plan lack a written cybersecurity policy meeting the DOL's April 2021 guidance?</div><div class="q-rationale"><strong>Why this matters:</strong> The DOL's 2021 guidance created specific compliance obligations for all ERISA plans. This is the most commonly unaddressed gap in plans under $100M.</div></div><div class="q-toggle" id="qt-cyber"><button class="qt" onclick="tog('cyber','yes',this,'cyber',0)">Yes</button><button class="qt" onclick="tog('cyber','no',this,'cyber',0)">No</button><button class="qt" onclick="tog('cyber','unk',this,'cyber',0)">Unknown</button></div></div>
+    <div class="show-more-row" onclick="toggleOptional('cyber-opt',this)"><div class="show-more-icon" id="icon-cyber-opt"><svg viewBox="0 0 10 10"><path d="M2 3l3 4 3-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="show-more-text">Additional questions</div><div class="show-more-count">— 3 more for deeper coverage</div></div>
+    <div class="optional-questions" id="cyber-opt">
+      <div class="q-section-divider"><div class="q-section-divider-label">Additional — optional</div><div class="q-section-divider-line"></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Is multi-factor authentication required for all participant and administrator access to plan accounts?</div><div class="q-rationale"><strong>Why this matters:</strong> MFA is the single most effective control against credential-based account theft and is explicitly required under the DOL's April 2021 guidance.</div></div><div class="q-toggle" id="qt-mfa"><button class="qt" onclick="tog('mfa','yes',this,'cyber',1)">Yes</button><button class="qt" onclick="tog('mfa','no',this,'cyber',1)">No</button><button class="qt" onclick="tog('mfa','unk',this,'cyber',1)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Has the recordkeeper provided a current cybersecurity attestation letter within the last 12 months?</div><div class="q-rationale"><strong>Why this matters:</strong> ERISA fiduciaries are responsible for the cybersecurity practices of their service providers. A current attestation is the primary evidence of ongoing monitoring.</div></div><div class="q-toggle" id="qt-rkattest"><button class="qt" onclick="tog('rkattest','yes',this,'cyber',2)">Yes</button><button class="qt" onclick="tog('rkattest','no',this,'cyber',2)">No</button><button class="qt" onclick="tog('rkattest','unk',this,'cyber',2)">Unknown</button></div></div>
+      <div class="q-row optional-q"><div class="q-text"><div class="q-label">Does the plan have a documented business continuity and disaster recovery plan covering plan data and participant account access?</div><div class="q-rationale"><strong>Why this matters:</strong> DOL guidance requires fiduciaries to assess and document business continuity arrangements for all critical service providers.</div></div><div class="q-toggle" id="qt-bcp"><button class="qt" onclick="tog('bcp','yes',this,'cyber',3)">Yes</button><button class="qt" onclick="tog('bcp','no',this,'cyber',3)">No</button><button class="qt" onclick="tog('bcp','unk',this,'cyber',3)">Unknown</button></div></div>
+    </div>
+    <!-- last category — no next link, show build reminder instead -->
+    <div class="next-cat-row" style="justify-content:space-between;">
+      <span style="font-size:12.5px;color:var(--ink-4);">All categories complete — ready to build.</span>
+      <span class="next-cat-link" onclick="document.querySelector('.build-btn').click()">Build Gap Analysis →</span>
+    </div>
+  </div>
+
+  <div class="build-cta">
+    <div class="build-cta-text"><strong>Ready to build.</strong> The 12 core questions are all that's needed. Any additional questions you've answered are automatically included. Confirmed "No" answers become confirmed gaps — "Unknown" answers become probable gaps, clearly labeled.</div>
+    <button class="build-btn" onclick="runAnalysis()">Build Gap Analysis</button>
+  </div>
+
+</div><!-- /intake-wrap -->
+
+<!-- ══ RESULTS ══ -->
+<div id="results-wrap">
+  <div class="results-hdr">
+    <div>
+      <div class="rh-eyebrow">Retirement Plan Gap Analysis</div>
+      <div class="rh-title" id="rh-title">—</div>
+      <div class="rh-meta" id="rh-meta">—</div>
+    </div>
+    <div class="rh-btns">
+      <button class="btn btn-secondary btn-sm" onclick="resetIntake()">← Edit inputs</button>
+      <button class="btn btn-secondary btn-sm" onclick="savePDF()">Open PDF</button>
+    </div>
+  </div>
+
+  <!-- view tabs -->
+  <div class="view-tabs">
+    <button class="vt active" id="vt-summary" onclick="switchView('summary')">Executive Summary</button>
+    <button class="vt" id="vt-gaps" onclick="switchView('gaps')">Gap Detail</button>
+    <button class="vt" id="vt-proposal" onclick="switchView('proposal')">Proposal</button>
+    <button class="vt" id="vt-saved" onclick="switchView('saved')">Analysis History</button>
+  </div>
+
+  <div id="view-summary"><div class="exec-doc" id="exec-doc"></div></div>
+  <div id="view-gaps" style="display:none;"><div id="gap-detail"></div></div>
+  <div id="view-proposal" style="display:none;"><div class="proposal-doc" id="proposal-doc"></div></div>
+
+  <!-- Analysis History -->
+  <div id="view-saved" style="display:none;">
+    <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-4);margin-bottom:4px;">Analysis History</div>
+        <div style="font-size:13px;color:var(--ink-3);">All prior gap analyses performed, sorted by date. Click any row to reload.</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="toast('Export coming soon')">Export all</button>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="background:var(--bg);">
+          <th style="padding:10px 18px;text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);border-bottom:1px solid var(--border);">Company</th>
+          <th style="padding:10px 14px;text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);border-bottom:1px solid var(--border);">Plan</th>
+          <th style="padding:10px 14px;text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);border-bottom:1px solid var(--border);">Contact</th>
+          <th style="padding:10px 14px;text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);border-bottom:1px solid var(--border);">Date</th>
+          <th style="padding:10px 14px;text-align:center;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);border-bottom:1px solid var(--border);">Score</th>
+          <th style="padding:10px 14px;text-align:center;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);border-bottom:1px solid var(--border);">Gaps</th>
+          <th style="padding:10px 14px;text-align:left;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-4);border-bottom:1px solid var(--border);">Status</th>
+          <th style="padding:10px 14px;border-bottom:1px solid var(--border);"></th>
+        </tr></thead>
+        <tbody id="history-tbody"></tbody>
+      </table>
+      <div id="history-empty" style="padding:48px 20px;text-align:center;display:none;">
+        <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;">No analyses on record yet</div>
+        <div style="font-size:13px;color:var(--ink-4);max-width:340px;margin:0 auto;line-height:1.6;">Each time you build a gap analysis and open the PDF, it will be saved here automatically — sorted by date, searchable by client name.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<div class="bottom-bar" id="bottom-bar" style="display:none;">
+  <div class="bb-info"><strong id="bb-gaps">—</strong> &nbsp;·&nbsp; <strong id="bb-confirmed">—</strong> confirmed &nbsp;·&nbsp; <strong id="bb-probable">—</strong> probable</div>
+  <div class="bb-btns">
+    <button class="btn btn-secondary btn-sm" onclick="copyProposal()">Copy as text</button>
+    <button class="btn btn-primary btn-sm" onclick="savePDF()">Open PDF</button>
+  </div>
+</div>
+
+<script>
+const T={};
+const coreKeys={fiduciary:['fid','min','train'],admin:['5500','bond','bench','fee'],investment:['ips','fundreview'],outcomes:['part','match','auto'],cyber:['cyber']};
+
+function tog(key,val,btn,cat,idx){
+  T[key]=val;
+  document.getElementById('qt-'+key).querySelectorAll('.qt').forEach(b=>b.className='qt');
+  btn.className='qt s-'+val;
+  updateDots(cat);
+}
+function tv(key){return T[key]||'unk';}
+
+function updateDots(cat){
+  const keys=coreKeys[cat]||[];
+  const prog=document.getElementById('tp-'+cat);
+  if(!prog)return;
+  prog.querySelectorAll('.tab-prog-dot').forEach((d,i)=>{
+    d.classList.remove('answered');
+    if(keys[i]&&T[keys[i]]&&T[keys[i]]!=='unk') d.classList.add('answered');
+  });
+}
+
+function switchCat(cat,btn){
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
+  // btn might be passed directly or we need to find it
+  const tabBtn = btn || document.querySelector(`.cat-tab[onclick*="${cat}"]`);
+  if(tabBtn) tabBtn.classList.add('active');
+  document.getElementById('panel-'+cat).classList.add('active');
+  // scroll to panel
+  setTimeout(()=>{
+    document.getElementById('panel-'+cat).scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
+
+function toggleOptional(id,row){
+  const el=document.getElementById(id);
+  const icon=document.getElementById('icon-'+id);
+  const isOpen=el.classList.contains('open');
+  el.classList.toggle('open',!isOpen);
+  if(icon)icon.classList.toggle('open',!isOpen);
+}
+
+/* ── GAP ENGINE ── */
+let intake={},gaps=[];
+
+function buildGaps(){
+  const G=[];
+
+  const fid=tv('fid');
+  if(fid!=='yes') G.push({cat:'Fiduciary Oversight',area:'Named Fiduciary Agreement (3(21)/3(38))',confirmed:fid==='no',risk:'High',
+    practice:"Signed 3(21) co-fiduciary acknowledgement or 3(38) investment management agreement documenting the advisor's fiduciary acceptance and scope of authority.",
+    insight:fid==='no'?'The committee confirmed no named fiduciary agreement exists. Without one, the committee retains full personal liability under ERISA for every investment decision made in the plan.':'A signed named fiduciary agreement could not be confirmed. Treat this as a gap until the executed document is in hand.',
+    verify:fid==='unk'?'Request a copy of any signed fiduciary agreement from the current advisor. An acceptable document explicitly accepts 3(21) co-fiduciary status or 3(38) discretionary investment management authority.':null,
+    action:"Engage First Hill Trust as named 3(38) investment manager. Execute the Investment Management Agreement within 30 days. This transfers investment decision liability from the committee to First Hill Trust by operation of ERISA Section 3(38)."});
+
+  const min=tv('min');
+  if(min!=='yes') G.push({cat:'Fiduciary Oversight',area:'Committee Meeting Minutes',confirmed:min==='no',risk:min==='no'?'High':'Medium',
+    practice:'Signed meeting minutes from each quarterly committee meeting, documenting fund performance reviewed, investment decisions made, and the rationale for each decision.',
+    insight:min==='no'?'The committee confirmed it does not have signed meeting minutes on file. This is the most common reason plans fail DOL audits. Without minutes, every committee member is personally unable to demonstrate a prudent process.':'Meeting minutes could not be confirmed. Verify before presenting — the absence of minutes is a material fiduciary exposure.',
+    verify:min==='unk'?'Ask the committee chair to produce signed minutes from the last four quarterly meetings. These must be written documents with member signatures.':null,
+    action:"Implement formal quarterly committee meetings with a documented agenda. First Hill Trust will attend each meeting, present the investment review, and produce signed minutes within five business days."});
+
+  const tr=tv('train');
+  if(tr!=='yes') G.push({cat:'Fiduciary Oversight',area:'Annual Fiduciary Training',confirmed:tr==='no',risk:tr==='no'?'Medium':'Low',
+    practice:'Annual fiduciary training completed by all committee members with signed written acknowledgement, covering ERISA obligations, the prudent investor standard, and prohibited transaction rules.',
+    insight:tr==='no'?'Committee members have not completed documented annual fiduciary training. Annual training with written acknowledgement provides meaningful protection in an examination or litigation context.':'Fiduciary training status could not be confirmed. Resolve during onboarding.',
+    verify:tr==='unk'?'Ask each committee member whether they have a written certificate from a fiduciary training session in the last 12 months.':null,
+    action:"Schedule annual fiduciary training. First Hill Trust will facilitate a 90-minute session and provide written acknowledgement forms retained in the plan's fiduciary file."});
+
+  const charter=tv('charter');
+  if(charter==='no') G.push({cat:'Fiduciary Oversight',area:'Committee Charter',confirmed:true,risk:'Medium',
+    practice:'A formal written committee charter defining membership, responsibilities, quorum, and meeting schedule, signed by plan sponsor leadership.',
+    insight:"No formal charter exists. Without one, the committee's legal structure is informal — a weakness plaintiff attorneys exploit in fiduciary breach claims.",
+    verify:null,
+    action:"Draft and adopt a formal committee charter within 60 days. First Hill Trust will provide a model template as part of the onboarding process."});
+
+  const spmon=tv('spmon');
+  if(spmon==='no') G.push({cat:'Fiduciary Oversight',area:'Service Provider Due Diligence Review',confirmed:true,risk:'Medium',
+    practice:'Formal documented due diligence review of all service providers — including recordkeeper, TPA, and advisor — completed in the last 24 months.',
+    insight:"No formal service provider review has been conducted. ERISA requires ongoing monitoring of all service providers — not just initial selection.",
+    verify:null,
+    action:"Conduct a formal service provider review within 90 days, benchmarking fees and services against market alternatives. First Hill Trust will prepare and present the review documentation."});
+
+  const conflict=tv('conflict');
+  if(conflict==='no') G.push({cat:'Fiduciary Oversight',area:'Conflict of Interest Management',confirmed:true,risk:'Medium',
+    practice:'Documented process for identifying, disclosing, and managing conflicts of interest among committee members and service providers, reviewed annually.',
+    insight:"No conflict of interest process exists. ERISA's prohibited transaction rules require disclosure and management of conflicts. An undisclosed conflict — even inadvertent — can void an otherwise prudent decision.",
+    verify:null,
+    action:"Implement a conflict of interest disclosure and management policy. First Hill Trust will provide a model policy and annual disclosure template as part of the onboarding package."});
+
+  const f5=tv('5500');
+  if(f5!=='yes') G.push({cat:'Administration & Operations',area:'Form 5500 Filing Compliance',confirmed:f5==='no',risk:f5==='no'?'High':'Medium',
+    practice:'Form 5500 filed on time each year — before plan year end plus 210 days — with no late or amended filings.',
+    insight:f5==='no'?'A late or amended 5500 filing has been confirmed. This is the #1 trigger for DOL audit selection.':'Filing status could not be confirmed. Verify directly on the DOL EFAST2 public database.',
+    verify:f5==='unk'?'Search the company name at efast.dol.gov. Compare the actual filing date to the deadline (plan year end + 210 days).':null,
+    action:"Review all prior 5500 filings for accuracy. Implement a compliance calendar with preparation beginning 90 days before the deadline."});
+
+  const bond=tv('bond');
+  if(bond!=='yes') G.push({cat:'Administration & Operations',area:'ERISA Fidelity Bond',confirmed:bond==='no',risk:'High',
+    practice:'A fidelity bond covering at least 10% of plan assets (minimum $500,000) naming the plan as insured, renewed annually.',
+    insight:bond==='no'?'No fidelity bond is in place. This is a statutory requirement under ERISA Section 412. Operating without one is a current legal violation.':'Fidelity bond status could not be confirmed. This is a statutory requirement — treat as a gap until confirmed with documentation.',
+    verify:bond==='unk'?'Request a certificate of insurance. The certificate must name the retirement plan as insured with coverage of at least 10% of plan assets.':null,
+    action:"Obtain or verify ERISA fidelity bond coverage immediately. Highest-urgency administrative gap — resolve within 30 days."});
+
+  const bench=tv('bench');
+  if(bench!=='yes') G.push({cat:'Administration & Operations',area:'Fee Benchmarking Study',confirmed:bench==='no',risk:'Medium',
+    practice:"A formal fee benchmarking study within the last 24 months comparing the plan's all-in cost to a peer database, with findings documented and reviewed by the committee.",
+    insight:bench==='no'?"No formal fee benchmarking has been conducted. Without documentation, the committee cannot defend fees in a DOL examination or participant lawsuit.":"Fee benchmarking could not be confirmed. Conduct one regardless — it is the primary defense against ERISA excessive fee litigation.",
+    verify:bench==='unk'?'Ask whether the plan sponsor has received a formal benchmarking report comparing specific plan fees to a peer database of at least 50 comparable plans.':null,
+    action:"Conduct a comprehensive fee benchmarking study. First Hill Trust will deliver a formal report within 60 days of engagement."});
+
+  const fee=tv('fee');
+  if(fee==='yes') G.push({cat:'Administration & Operations',area:'Excessive Fee Exposure',confirmed:true,risk:'High',
+    practice:'All-in plan cost at or below the peer median of approximately 0.62% for plans $10M–$100M, confirmed through annual benchmarking.',
+    insight:"The plan's all-in cost is confirmed above 0.75% of assets — above the peer median. Every basis point above benchmark represents a specific dollar amount leaving participant accounts and creates ERISA excessive fee exposure.",
+    verify:null,
+    action:"Conduct immediate fund expense ratio benchmarking to identify institutional share class alternatives. Negotiate recordkeeper fee reductions. Model and present participant-level savings projections within 60 days."});
+  else if(fee==='unk') G.push({cat:'Administration & Operations',area:'Fee Level — Unconfirmed',confirmed:false,risk:'Medium',
+    practice:'All-in plan cost confirmed through 408(b)(2) disclosure and formally compared to peer median.',
+    insight:"Plan fee level could not be confirmed. Fee reasonableness is a core ERISA obligation.",
+    verify:"Obtain the most recent 408(b)(2) fee disclosure. Total all fees and compare to the peer median of approximately 0.62% for plans $10M–$100M.",
+    action:"Obtain and review the most recent 408(b)(2) fee disclosure. Conduct formal peer fee benchmarking within 30 days of engagement."});
+
+  const plandoc=tv('plandoc');
+  if(plandoc==='no') G.push({cat:'Administration & Operations',area:'Plan Document Currency',confirmed:true,risk:'Medium',
+    practice:'Plan document restated within the last 6 years with all required amendments adopted timely.',
+    insight:"The plan document has not been timely restated or amended. An outdated document can disqualify the plan and result in significant tax liability.",
+    verify:null,action:"Review the restatement date and all amendments. Engage the TPA to update the document to current requirements within 90 days."});
+
+  const spd=tv('spd');
+  if(spd==='no') G.push({cat:'Administration & Operations',area:'Summary Plan Description',confirmed:true,risk:'Medium',
+    practice:'Current SPD distributed to all participants within the ERISA-mandated timeframe, with distribution records maintained.',
+    insight:"Failure to distribute an SPD creates participant claims exposure and DOL penalties.",
+    verify:null,action:"Update and distribute the SPD to all participants. Maintain distribution records. Add SPD review to the annual compliance calendar."});
+
+  const testing=tv('testing');
+  if(testing==='no') G.push({cat:'Administration & Operations',area:'Compliance Testing',confirmed:true,risk:'High',
+    practice:'Annual ADP/ACP discrimination testing completed on time with corrective distributions made within the required deadline.',
+    insight:"Missed testing deadlines result in mandatory excise taxes and can disqualify the plan.",
+    verify:null,action:"Review testing history for the last 3 plan years. Implement a compliance calendar with testing milestones. Consider QACA safe harbor to eliminate ADP/ACP testing requirements."});
+
+  const revshare=tv('revshare');
+  if(revshare==='no') G.push({cat:'Administration & Operations',area:'Revenue Sharing Review',confirmed:true,risk:'Medium',
+    practice:'All revenue sharing arrangements reviewed, documented, and either justified or eliminated through fee offsets.',
+    insight:"Undisclosed revenue sharing is one of the most common elements of ERISA excessive compensation claims.",
+    verify:null,action:"Audit all revenue sharing in the current fund lineup. Consider net-of-revenue-sharing share classes or a revenue credit arrangement that returns revenue sharing to participants."});
+
+  const ips=tv('ips');
+  if(ips!=='yes') G.push({cat:'Investment Oversight',area:'Investment Policy Statement',confirmed:ips==='no',risk:'High',
+    practice:"A current IPS signed by all committee members, dated within the last 36 months, specifying investment objectives, asset class ranges, fund evaluation criteria, and watch list procedures.",
+    insight:ips==='no'?'No IPS exists. Without one, every investment selection is legally indefensible.':'An IPS could not be confirmed. If it cannot be produced within 24 hours, treat this as a confirmed gap.',
+    verify:ips==='unk'?'Request any existing IPS from the current advisor or plan administrator. If none can be produced within 24 hours, treat as confirmed.':null,
+    action:"Draft and adopt a comprehensive IPS tailored to this plan. First Hill Trust will prepare a custom IPS for committee review and signature within 30 days of engagement."});
+
+  const fr=tv('fundreview');
+  if(fr!=='yes') G.push({cat:'Investment Oversight',area:'Fund Performance Review',confirmed:fr==='no',risk:fr==='no'?'High':'Medium',
+    practice:'Formal quarterly fund performance review against benchmark and peer group with documented watch list criteria.',
+    insight:fr==='no'?'No formal documented fund review has taken place. ERISA requires ongoing monitoring — not just initial selection.':'Fund review status could not be confirmed. Without documented reviews, the committee cannot demonstrate ongoing prudent oversight.',
+    verify:fr==='unk'?'Ask whether the advisor has provided a formal fund performance report with documentation retained in committee files.':null,
+    action:"Implement formal quarterly investment reviews. First Hill Trust will provide a written fund performance report before each committee meeting with documented watch list and replacement rationale."});
+
+  const qdia=tv('qdia');
+  if(qdia==='no') G.push({cat:'Investment Oversight',area:'QDIA Designation',confirmed:true,risk:'Medium',
+    practice:'A formally designated QDIA meeting DOL safe harbor requirements with proper advance participant notice.',
+    insight:"Without proper QDIA designation, the committee retains liability for all participants who default into the plan without making an election.",
+    verify:null,action:"Formally designate a QDIA and provide required participant notice. Target date funds are the most common and defensible QDIA option."});
+
+  const sc=tv('shareclass');
+  if(sc==='no') G.push({cat:'Investment Oversight',area:'Share Class Optimization',confirmed:true,risk:'Medium',
+    practice:'All funds in the lineup offered in the lowest-cost share class available to a plan of this size.',
+    insight:"Failure to use the lowest-cost available share class is a common element of ERISA excessive fee lawsuits.",
+    verify:null,action:"Conduct a share class review across all funds. Identify and transition to institutional share classes where available. Document the review for the fiduciary file."});
+
+  const wl=tv('watchlist');
+  if(wl==='no') G.push({cat:'Investment Oversight',area:'Fund Watch List Process',confirmed:true,risk:'Medium',
+    practice:'A formal watch list process with documented criteria for placing funds on watch and for replacement.',
+    insight:"Without documented watch list criteria, the committee has no framework for demonstrating active, prudent management of the investment menu.",
+    verify:null,action:"Implement a formal watch list process — typically 3 consecutive quarters of underperformance vs benchmark. First Hill Trust will apply and document this in each quarterly fund review."});
+
+  const part=tv('part');
+  if(part==='yes') G.push({cat:'Participant Outcomes',area:'Participation Rate Below 80%',confirmed:true,risk:'High',
+    practice:'Plan participation rate at or above 80%, sustained through auto-enrollment at 6%+ default deferral.',
+    insight:"A confirmed participation rate below 80% is a plan design deficiency. Low participation is almost always correctable through auto-enrollment.",
+    verify:null,action:"Implement auto-enrollment at a minimum 6% default deferral rate with opt-out capability. First Hill Trust will model the expected 12-month participation improvement."});
+  else if(part==='unk') G.push({cat:'Participant Outcomes',area:'Participation Rate — Unconfirmed',confirmed:false,risk:'Medium',
+    practice:'Plan participation rate at or above 80%, documented and monitored with corrective action when below threshold.',
+    insight:"Participation rate could not be confirmed. Obtain the current rate from the recordkeeper dashboard.",
+    verify:"Request the current participation rate from the recordkeeper's plan health dashboard.",
+    action:"Confirm participation rate. If below 80%, develop a plan design improvement proposal."});
+
+  const match=tv('match');
+  if(match==='yes') G.push({cat:'Participant Outcomes',area:'Employer Match Below Peer Median',confirmed:true,risk:'Medium',
+    practice:'Employer match formula at or above the industry peer median — approximately 50% of the first 6% of salary.',
+    insight:"The match formula is confirmed below peer median. This suppresses participation and deferral rates and creates a recruiting disadvantage.",
+    verify:null,action:"Conduct an employer match benchmarking study versus industry peers. Model the cost and participation impact of increasing the match to peer median. Present to leadership within 90 days."});
+
+  const auto=tv('auto');
+  if(auto==='yes') G.push({cat:'Participant Outcomes',area:'Auto-Enrollment / Auto-Escalation',confirmed:true,risk:'Medium',
+    practice:'Auto-enrollment at 6%+ default deferral with annual auto-escalation of 1% to a 10% cap.',
+    insight:"Auto-enrollment is inactive or below the recommended default. Plans with auto-enrollment at 6% consistently show 15–25% higher participation.",
+    verify:null,action:"Implement auto-enrollment at a 6% default deferral rate. Add auto-escalation at 1% annually up to 10%. First Hill Trust will model the expected improvement over 24 months."});
+
+  const esc=tv('escalate');
+  if(esc==='no') G.push({cat:'Participant Outcomes',area:'Auto-Escalation Feature',confirmed:true,risk:'Low',
+    practice:'Auto-escalation implemented at 1% annually to a 10% cap, applied to all participants enrolled under auto-enrollment.',
+    insight:"Most participants set a deferral rate at enrollment and never increase it voluntarily. Auto-escalation corrects this inertia.",
+    verify:null,action:"Implement auto-escalation at 1% annually up to a 10% cap. Coordinate with the recordkeeper on implementation timeline."});
+
+  const well=tv('wellness');
+  if(well==='no') G.push({cat:'Participant Outcomes',area:'Financial Wellness Program',confirmed:true,risk:'Low',
+    practice:'Annual financial wellness education program with personalized retirement readiness reporting available to all participants.',
+    insight:"Participants who understand their retirement readiness are significantly more likely to increase their deferral rate.",
+    verify:null,action:"Implement an annual financial wellness program through the recordkeeper or a third-party provider."});
+
+  const dist=tv('distrib');
+  if(dist==='no') G.push({cat:'Participant Outcomes',area:'Distribution Counseling',confirmed:true,risk:'Low',
+    practice:'Pre-retirement counseling offered to participants approaching retirement age with distribution options clearly documented.',
+    insight:"Poor distribution guidance results in suboptimal tax decisions and is an increasing source of participant complaints and litigation.",
+    verify:null,action:"Implement a pre-retirement counseling program for participants within 5 years of retirement."});
+
+  const cyber=tv('cyber');
+  if(cyber==='yes') G.push({cat:'Technology & Cybersecurity',area:'Cybersecurity Policy (DOL 2021)',confirmed:true,risk:'High',
+    practice:"A written cybersecurity policy meeting the DOL's April 2021 guidance — covering access controls, data encryption, MFA, and incident response.",
+    insight:"No cybersecurity policy exists. The DOL's April 2021 guidance created specific compliance obligations for all ERISA plans.",
+    verify:null,action:"Draft and adopt a written cybersecurity policy meeting all April 2021 DOL guidance requirements. First Hill Trust will provide a model policy within 30 days of engagement."});
+  else if(cyber==='unk') G.push({cat:'Technology & Cybersecurity',area:'Cybersecurity Policy — Unconfirmed',confirmed:false,risk:'Medium',
+    practice:"Written cybersecurity policy meeting DOL April 2021 guidance requirements.",
+    insight:"Cybersecurity policy status could not be confirmed. Treat as a gap until the written document is confirmed.",
+    verify:"Request a copy of any written cybersecurity policy from the plan administrator or TPA.",
+    action:"Confirm existence of written cybersecurity policy. If none exists, adopt one within 60 days of engagement."});
+
+  const mfa=tv('mfa');
+  if(mfa==='no') G.push({cat:'Technology & Cybersecurity',area:'Multi-Factor Authentication',confirmed:true,risk:'Medium',
+    practice:'MFA required for all participant and administrator access to plan accounts.',
+    insight:"MFA is the single most effective control against credential-based account theft and is explicitly required under DOL April 2021 guidance.",
+    verify:null,action:"Confirm with the recordkeeper that MFA is available and mandate it for all plan account access."});
+
+  const att=tv('rkattest');
+  if(att==='no') G.push({cat:'Technology & Cybersecurity',area:'Recordkeeper Cybersecurity Attestation',confirmed:true,risk:'Medium',
+    practice:"A current cybersecurity attestation letter from the recordkeeper, provided within the last 12 months.",
+    insight:"ERISA fiduciaries are responsible for the cybersecurity practices of their service providers. Without a current attestation, the committee cannot demonstrate it has monitored the recordkeeper's cybersecurity posture.",
+    verify:null,action:"Request a current cybersecurity attestation from the recordkeeper. Add annual attestation request to the compliance calendar."});
+
+  const bcp=tv('bcp');
+  if(bcp==='no') G.push({cat:'Technology & Cybersecurity',area:'Business Continuity Planning',confirmed:true,risk:'Low',
+    practice:"Documented business continuity and disaster recovery plan covering plan data and participant account access.",
+    insight:"DOL guidance requires fiduciaries to assess the resilience of all critical service providers.",
+    verify:null,action:"Request the recordkeeper's business continuity and disaster recovery documentation. Review at the next committee meeting and document the committee's assessment."});
+
+  return G;
+}
+
+const TOTALS={'Fiduciary Oversight':6,'Administration & Operations':8,'Investment Oversight':5,'Participant Outcomes':6,'Technology & Cybersecurity':4};
+function calcScores(gs){
+  const cats={};
+  Object.entries(TOTALS).forEach(([c,t])=>{
+    const cg=gs.filter(g=>g.cat===c).length;
+    cats[c]={pct:Math.round(Math.max(0,(1-cg/t)*100)),gaps:cg,total:t};
+  });
+  const total=Object.values(TOTALS).reduce((s,v)=>s+v,0);
+  return{cats,overall:Math.round(Math.max(0,(1-gs.length/total)*100))};
+}
+
+function runAnalysis(){
+  intake={
+    co:document.getElementById('i-co').value.trim()||'Unknown Company',
+    type:document.getElementById('i-type').value,
+    assets:document.getElementById('i-assets').value.trim()||'—',
+    rk:document.getElementById('i-rk').value.trim()||'—',
+    contact:document.getElementById('i-contact').value.trim()||'Plan Committee',
+    ctitle:document.getElementById('i-ctitle').value.trim()||'HR Director',
+  };
+  document.getElementById('loadCover').classList.remove('hidden');
+  const steps=['Reading fiduciary structure responses...','Evaluating named fiduciary documentation...','Checking administration compliance...','Reviewing investment oversight responses...','Analyzing participant outcome data...','Assessing cybersecurity posture...','Including additional question responses...','Classifying confirmed vs probable gaps...','Building executive summary...'];
+  let i=0;
+  const fill=document.getElementById('prog-fill'),step=document.getElementById('prog-step');
+  const tmr=setInterval(()=>{if(i<steps.length){step.textContent=steps[i];fill.style.width=((i+1)/steps.length*100)+'%';i++;}},240);
+  setTimeout(()=>{clearInterval(tmr);document.getElementById('loadCover').classList.add('hidden');gaps=buildGaps();render();},steps.length*240+200);
+}
+
+function render(){
+  const sc=calcScores(gaps);
+  const confirmed=gaps.filter(g=>g.confirmed).length,probable=gaps.length-confirmed;
+  document.getElementById('intake-wrap').style.display='none';
+  document.getElementById('results-wrap').style.display='block';
+  document.getElementById('bottom-bar').style.display='flex';
+  document.getElementById('rh-title').textContent=`${intake.co} — ${intake.type}`;
+  document.getElementById('rh-meta').textContent=`${intake.assets} · ${intake.contact}, ${intake.ctitle} · ${intake.rk}`;
+  document.getElementById('bb-gaps').textContent=`${gaps.length} gap${gaps.length!==1?'s':''} identified`;
+  document.getElementById('bb-confirmed').textContent=confirmed;
+  document.getElementById('bb-probable').textContent=probable;
+  buildExecSummary(sc,confirmed,probable);
+  buildGapDetail();
+  buildProposal(sc);
+  switchView('summary');
+}
+
+function buildExecSummary(sc,confirmed,probable){
+  const ov=sc.overall;
+  const rC=ov>=75?'var(--green)':ov>=55?'var(--amber)':'var(--red)';
+  const rB=ov>=75?'var(--green-lt)':ov>=55?'var(--amber-lt)':'var(--red-lt)';
+  const rL=ov>=75?'Low Risk':ov>=55?'Medium Risk':'High Risk';
+  const rGrade=ov>=85?'A':ov>=75?'B':ov>=60?'C':ov>=50?'D':'F';
+  const C=2*Math.PI*52; // r=52
+  const off=C*(1-ov/100);
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  // category cards
+  const catCards=Object.entries(sc.cats).map(([cat,c])=>{
+    const cl=c.pct>=75?'g':c.pct>=55?'a':'r';
+    const short={'Fiduciary Oversight':'Fiduciary','Administration & Operations':'Administration','Investment Oversight':'Investment','Participant Outcomes':'Participant Outcomes','Technology & Cybersecurity':'Cybersecurity'};
+    return `<div class="sc-cat-card ${cl}">
+      <div class="sc-cat-card-top">
+        <div class="sc-cat-name">${short[cat]||cat}</div>
+        <div class="sc-cat-score">${c.pct}</div>
+      </div>
+      <div class="sc-cat-bar-outer"><div class="sc-cat-bar-fill" style="width:${c.pct}%"></div></div>
+      <div class="sc-cat-gaps">${c.gaps===0?'No gaps identified':c.gaps+' gap'+(c.gaps!==1?'s':'')+' identified'}</div>
+    </div>`;
+  }).join('');
+
+  const hiCount=gaps.filter(g=>g.risk==='High').length;
+  const mdCount=gaps.filter(g=>g.risk==='Medium').length;
+  const loCount=gaps.filter(g=>g.risk==='Low').length;
+
+  const sorted=[...gaps].sort((a,b)=>({'High':0,'Medium':1,'Low':2}[a.risk]||2)-({'High':0,'Medium':1,'Low':2}[b.risk]||2));
+  const rows=sorted.map(g=>`<tr><td>${g.area}</td><td style="color:var(--ink-4);font-size:12px;">${g.cat}</td><td><span class="risk-pill ${g.risk}"><span class="rp-dot"></span>${g.risk}</span></td><td><span class="conf-tag ${g.confirmed?'confirmed':'probable'}">${g.confirmed?'Confirmed':'Probable'}</span></td></tr>`).join('');
+
+  document.getElementById('exec-doc').innerHTML=`
+    <div class="ed-masthead">
+      <div class="ed-mh-top">
+        <div class="ed-mh-logo"><div class="ed-mh-lm"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v8l7 4 7-4V6L10 2zm0 2.3l5 2.8v6.4l-5 2.8-5-2.8V7.1l5-2.8z"/></svg></div><div class="ed-mh-ln">First Hill Trust — Retirement Services</div></div>
+        <div class="ed-mh-date">${today}</div>
+      </div>
+      <div class="ed-mh-title">Retirement Plan Gap Analysis — ${intake.co}</div>
+      <div class="ed-mh-sub">${intake.type} &nbsp;·&nbsp; ${intake.assets} &nbsp;·&nbsp; Prepared for ${intake.contact}, ${intake.ctitle}</div>
+    </div>
+
+    <!-- PREMIUM SCORECARD -->
+    <div class="sc-hero">
+      <div class="sc-hero-left">
+        <div class="sc-grade-wrap">
+          <svg viewBox="0 0 120 120">
+            <circle class="sc-ring-bg" cx="60" cy="60" r="52"/>
+            <circle class="sc-ring-fg" cx="60" cy="60" r="52"
+              stroke="${rC}"
+              stroke-dasharray="${C}"
+              stroke-dashoffset="${off}"/>
+          </svg>
+          <div class="sc-grade-inner">
+            <div class="sc-grade-num" style="color:${rC}">${ov}</div>
+            <div class="sc-grade-denom">/ 100</div>
+          </div>
+        </div>
+        <div class="sc-risk-badge" style="background:${rB};color:${rC};">${rL}</div>
+      </div>
+      <div class="sc-hero-right">
+        <div class="sc-hero-tagline">Compliance score by category</div>
+        <div class="sc-cat-grid">${catCards}</div>
+      </div>
+    </div>
+
+    <!-- FINDINGS STRIP -->
+    <div class="sc-findings">
+      <div class="sc-finding">
+        <div class="sc-finding-num" style="color:var(--red)">${hiCount}</div>
+        <div class="sc-finding-lbl">High risk gaps — action within 60 days</div>
+        <div class="sc-finding-bar" style="background:var(--red);opacity:.25;"></div>
+      </div>
+      <div class="sc-finding">
+        <div class="sc-finding-num" style="color:var(--amber)">${mdCount}</div>
+        <div class="sc-finding-lbl">Medium risk — address within 90 days</div>
+        <div class="sc-finding-bar" style="background:var(--amber);opacity:.25;"></div>
+      </div>
+      <div class="sc-finding">
+        <div class="sc-finding-num" style="color:var(--ink-3)">${loCount}</div>
+        <div class="sc-finding-lbl">Lower risk items identified</div>
+        <div class="sc-finding-bar" style="background:var(--border);"></div>
+      </div>
+      <div class="sc-finding">
+        <div class="sc-finding-num" style="color:var(--blue)">${confirmed}</div>
+        <div class="sc-finding-lbl">Confirmed by plan sponsor responses</div>
+        <div class="sc-finding-bar" style="background:var(--blue);opacity:.25;"></div>
+      </div>
+    </div>
+
+    <div class="ed-legend">
+      <div class="ed-legend-ttl">Key:</div>
+      <div class="ed-legend-item"><span class="ed-lm" style="background:var(--red-lt);color:var(--red);">Confirmed</span> Plan sponsor answered No — documented deficiency.</div>
+      <div class="ed-legend-item"><span class="ed-lm" style="background:var(--bg);color:var(--ink-4);border:1px dashed var(--border);">Probable</span> Plan sponsor answered Unknown — verify before presenting as confirmed.</div>
+    </div>
+
+    ${probable>0?`<div style="padding:16px 28px 0;"><div class="ed-advisor-note"><div class="ed-an-text"><strong>${probable} probable gap${probable!==1?'s are':' is'} included.</strong> Based on "Unknown" answers. Each includes a verification checklist in Gap Detail. Verify before presenting as confirmed findings to the plan sponsor.</div></div></div>`:''}
+
+    <div class="ed-gap-table" style="padding-top:${probable>0?'16px':'22px'};">
+      <div class="ed-gap-ttl">Complete gap inventory</div>
+      <table class="gap-inv-table"><thead><tr><th>Gap identified</th><th>Category</th><th>Risk level</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>`;
+}
+
+function buildGapDetail(){
+  let html='';
+  Object.keys(TOTALS).forEach(cat=>{
+    const cg=gaps.filter(g=>g.cat===cat);
+    if(!cg.length)return;
+    const items=cg.map((g,i)=>{
+      const uid=`gi-${cat.replace(/\W+/g,'-')}-${i}`;
+      const ct=g.confirmed?`<span class="conf-tag confirmed">Confirmed</span>`:`<span class="conf-tag probable">Probable</span>`;
+      const body=g.confirmed?`<div class="insight-box"><div class="insight-lbl">Why this matters</div><div class="insight-txt">${g.insight}</div></div>`:`<div class="probable-box"><div class="probable-lbl">Probable gap — verify before presenting as confirmed</div><div class="insight-txt">${g.insight}</div></div>`;
+      const verify=g.verify?`<div class="verify-box"><div class="verify-lbl">Verification checklist</div><div class="verify-txt">${g.verify}</div></div>`:'';
+      return `<div class="gap-item">
+        <div class="gi-hdr" onclick="tgi('${uid}')">
+          <div class="gi-bar ${g.risk}"></div>
+          <div class="gi-info"><div class="gi-area">${g.area}</div><div class="gi-practice">${g.practice.substring(0,80)}${g.practice.length>80?'…':''}</div></div>
+          <div class="gi-meta"><span class="risk-pill ${g.risk}"><span class="rp-dot"></span>${g.risk}</span>${ct}<div class="gi-chev" id="${uid}-c"><svg viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="gi-body" id="${uid}"><div class="gi-inner">${body}${verify}
+          <div class="gi-two-col">
+            <div class="gi-field"><label>Best practice standard</label><div class="gi-field-val">${g.practice}</div></div>
+            <div class="gi-field"><label>Risk level</label><select class="risk-sel ${g.risk}" onchange="this.className='risk-sel '+this.value"><option value="High" ${g.risk==='High'?'selected':''}>High Risk</option><option value="Medium" ${g.risk==='Medium'?'selected':''}>Medium Risk</option><option value="Low" ${g.risk==='Low'?'selected':''}>Low Risk</option></select></div>
+          </div>
+          <div class="action-field"><label>Recommended action</label><textarea class="action-ta" rows="3">${g.action}</textarea></div>
+        </div></div>
+      </div>`;
+    }).join('');
+    html+=`<div class="gap-cat-block"><div class="gcb-hdr"><div class="gcb-title">${cat}</div><div class="gcb-meta">${cg.length} gap${cg.length!==1?'s':''} · ${cg.filter(g=>g.confirmed).length} confirmed</div></div>${items}</div>`;
+  });
+  document.getElementById('gap-detail').innerHTML=html;
+}
+
+function tgi(uid){
+  const b=document.getElementById(uid),c=document.getElementById(uid+'-c');
+  const open=b.classList.contains('open');
+  b.classList.toggle('open',!open);if(c)c.classList.toggle('open',!open);
+}
+
+function buildProposal(sc){
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const hi=gaps.filter(g=>g.risk==='High'),md=gaps.filter(g=>g.risk==='Medium');
+  const confirmed=gaps.filter(g=>g.confirmed).length,probable=gaps.length-confirmed;
+  const hiR=hi.map(g=>`<div class="pd-gap"><div class="pd-gap-bar High"></div><div><div class="pd-gap-area">${g.area} <span style="font-size:11px;font-weight:400;color:var(--ink-4);">${g.cat}</span></div><div class="pd-gap-action">${g.action}</div></div></div>`).join('');
+  const mdR=md.map(g=>`<div class="pd-gap"><div class="pd-gap-bar Medium"></div><div><div class="pd-gap-area">${g.area} <span style="font-size:11px;font-weight:400;color:var(--ink-4);">${g.cat}</span></div><div class="pd-gap-action">${g.action}</div></div></div>`).join('');
+
+  // ── CHART: SVG horizontal bar chart — category compliance scores
+  const chartCats = Object.entries(sc.cats);
+  const shortNames = {'Fiduciary Oversight':'Fiduciary Oversight','Administration & Operations':'Administration','Investment Oversight':'Investment Oversight','Participant Outcomes':'Participant Outcomes','Technology & Cybersecurity':'Cybersecurity'};
+  const barH = 26, barGap = 14, chartPad = 16, labelW = 158, barAreaW = 300, totalW = labelW + barAreaW + 70;
+  const chartH = chartCats.length * (barH + barGap) - barGap + chartPad*2;
+
+  const bars = chartCats.map(([cat,c],i)=>{
+    const y = chartPad + i*(barH+barGap);
+    // Use blue for healthy, desaturated slate for concerning — no traffic lights
+    const barColor = c.pct >= 75 ? '#1565e8' : c.pct >= 55 ? '#5a6a7e' : '#2d3a4a';
+    const barOpacity = c.pct >= 75 ? '0.8' : c.pct >= 55 ? '0.65' : '0.9';
+    const barW = Math.max(4, (c.pct/100)*barAreaW);
+    return `
+      <text x="${labelW-10}" y="${y+barH/2+4}" text-anchor="end" font-family="DM Sans,sans-serif" font-size="12" fill="#5a6a7e">${shortNames[cat]||cat}</text>
+      <rect x="${labelW}" y="${y}" width="${barAreaW}" height="${barH}" rx="3" fill="#eaeff5"/>
+      <rect x="${labelW}" y="${y}" width="${barW}" height="${barH}" rx="3" fill="${barColor}" opacity="${barOpacity}"/>
+      <text x="${labelW+barW+8}" y="${y+barH/2+4}" font-family="DM Sans,sans-serif" font-size="12" font-weight="600" fill="${barColor}" opacity="${barOpacity}">${c.pct}%</text>
+      ${c.gaps > 0
+        ? `<text x="${labelW+barAreaW+50}" y="${y+barH/2+4}" font-family="DM Sans,sans-serif" font-size="11" fill="#8a98a8" text-anchor="middle">${c.gaps} gap${c.gaps!==1?'s':''}</text>`
+        : `<text x="${labelW+barAreaW+50}" y="${y+barH/2+4}" font-family="DM Sans,sans-serif" font-size="11" fill="#0d7a4e" text-anchor="middle">No gaps</text>`
+      }
+    `;
+  }).join('');
+
+  // Donut — blue ring on light grey track
+  const r=44, cx=54, cy=54, circ=2*Math.PI*r;
+  const dash=circ*(sc.overall/100);
+  const ringColor = '#1565e8';
+  const riskLabel = sc.overall>=75?'Low Risk':sc.overall>=55?'Medium Risk':'High Risk';
+  const riskColor = sc.overall>=75?'#0d7a4e':sc.overall>=55?'#92530c':'#b91c1c';
+  const riskBg = sc.overall>=75?'#edf6f1':sc.overall>=55?'#fef6ee':'#fef2f2';
+
+  const chartHTML = `
+  <div style="padding:22px 40px 20px;border-bottom:1px solid var(--border-2);">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-4);margin-bottom:18px;display:flex;align-items:center;gap:10px;">Compliance at a glance <span style="flex:1;height:1px;background:var(--border-2);display:block;"></span></div>
+    <div style="display:flex;align-items:center;gap:40px;">
+      <div style="flex-shrink:0;text-align:center;">
+        <svg width="108" height="108" viewBox="0 0 108 108" style="display:block;margin:0 auto 10px;">
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#eaeff5" stroke-width="10"/>
+          <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${ringColor}" stroke-width="10"
+            stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ-dash}"
+            transform="rotate(-90 ${cx} ${cy})" opacity="0.85"/>
+          <text x="${cx}" y="${cy-5}" text-anchor="middle" font-family="Fraunces,serif" font-size="22" font-weight="700" fill="#0f1923">${sc.overall}</text>
+          <text x="${cx}" y="${cy+12}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#8a98a8">/ 100</text>
+        </svg>
+        <div style="font-size:11.5px;font-weight:600;color:${riskColor};padding:3px 12px;border-radius:20px;background:${riskBg};display:inline-block;">${riskLabel}</div>
+      </div>
+      <div style="flex:1;overflow:hidden;">
+        <svg viewBox="0 0 ${totalW} ${chartH}" width="100%" style="display:block;">
+          ${bars}
+        </svg>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('proposal-doc').innerHTML=`
+    <div class="pd-cover">
+      <div class="pd-cv-logo"><div class="pd-cv-lm"><svg viewBox="0 0 20 20"><path d="M10 2L3 6v8l7 4 7-4V6L10 2zm0 2.3l5 2.8v6.4l-5 2.8-5-2.8V7.1l5-2.8z"/></svg></div><div class="pd-cv-ln">First Hill Trust — Retirement Services</div></div>
+      <div class="pd-cv-lbl">Retirement Plan Gap Analysis</div>
+      <div class="pd-cv-title">${intake.co} — ${intake.type}</div>
+      <div class="pd-cv-sub">Prepared for ${intake.contact}, ${intake.ctitle}</div>
+      <div class="pd-cv-meta">
+        <div class="pd-cv-mi"><div class="pd-cv-ml">Plan assets</div><div class="pd-cv-mv">${intake.assets}</div></div>
+        <div class="pd-cv-mi"><div class="pd-cv-ml">Recordkeeper</div><div class="pd-cv-mv">${intake.rk}</div></div>
+        <div class="pd-cv-mi"><div class="pd-cv-ml">Compliance score</div><div class="pd-cv-mv">${sc.overall} / 100</div></div>
+        <div class="pd-cv-mi"><div class="pd-cv-ml">Gaps identified</div><div class="pd-cv-mv">${gaps.length} (${confirmed} confirmed)</div></div>
+        <div class="pd-cv-mi"><div class="pd-cv-ml">Prepared by</div><div class="pd-cv-mv">Robert Delgado, CFA</div></div>
+        <div class="pd-cv-mi"><div class="pd-cv-ml">Date</div><div class="pd-cv-mv">${today}</div></div>
+      </div>
+    </div>
+    <div class="pd-body">
+      <div class="pd-sec">
+        <div class="pd-sec-lbl">Executive Summary</div>
+        <div class="edit-hint"><div class="edit-hint-dot"></div>Click to edit this section</div>
+        <div class="pd-text" contenteditable="true" data-placeholder="Enter executive summary...">First Hill Trust has completed a retirement plan gap analysis of ${intake.co}'s ${intake.type}. The analysis evaluated the plan across five dimensions — fiduciary oversight, plan administration, investment oversight, participant outcomes, and technology and cybersecurity — using a structured assessment of factual questions answered directly by the plan sponsor.
+
+The assessment identified ${gaps.length} gap${gaps.length!==1?'s':''}, producing an overall compliance score of ${sc.overall} out of 100. ${hi.length} item${hi.length!==1?'s were':' was'} identified as high risk and require action within 60 days of engagement. ${confirmed} gap${confirmed!==1?'s are':' is'} confirmed based on direct plan sponsor responses${probable>0?`. ${probable} gap${probable!==1?'s are':' is'} probable, pending document verification`:''}.
+
+First Hill Trust is prepared to address each identified gap as a dedicated fiduciary advisor, providing the documentation, oversight structure, and ongoing monitoring needed to satisfy ERISA's prudent expert standard and protect each committee member from personal fiduciary liability.</div>
+      </div>
+      ${chartHTML}
+      ${hi.length?`<div class="pd-sec"><div class="pd-sec-lbl">High Priority — Within 60 Days</div><div class="pd-sec-title">These ${hi.length} gap${hi.length!==1?'s':''} require immediate attention.</div>${hiR}</div>`:''}
+      ${md.length?`<div class="pd-sec"><div class="pd-sec-lbl">Medium Priority — Within 90 Days</div><div class="pd-sec-title">These ${md.length} item${md.length!==1?'s':''} represent meaningful exposure and should be addressed in the first quarter.</div>${mdR}</div>`:''}
+      <div class="pd-sec">
+        <div class="pd-sec-lbl">Engagement Scope</div>
+        <div class="pd-sec-title">How First Hill Trust closes every identified gap.</div>
+        <div class="pd-scope-block"><div class="pd-scope-lbl">Named Fiduciary Coverage</div><div class="pd-scope-text">First Hill Trust will act as named 3(38) investment manager or 3(21) co-fiduciary — documented in a signed engagement agreement, legally effective upon execution. Investment decision liability transfers from the committee to First Hill Trust by operation of ERISA.</div></div>
+        <div class="pd-scope-block"><div class="pd-scope-lbl">Quarterly Investment Reviews</div><div class="pd-scope-text">A formal investment review report produced before each committee meeting — fund performance vs. benchmark, fee benchmarking, participant outcomes, and a signed fiduciary attestation. First Hill Trust will attend every meeting and produce signed minutes within five business days.</div></div>
+        <div class="pd-scope-block"><div class="pd-scope-lbl">Compliance Calendar</div><div class="pd-scope-text">All filing deadlines, testing requirements, and compliance obligations tracked proactively. Alerts issued 90 days before each deadline. First Hill Trust coordinates directly with the TPA.</div></div>
+        <div class="pd-scope-block"><div class="pd-scope-lbl">Gap Remediation</div><div class="pd-scope-text">All high-risk gaps closed within 60 days. Medium-risk items within 90 days. Gap closure status documented and reported to the committee at each quarterly meeting.</div></div>
+      </div>
+      <div class="pd-sec">
+        <div class="pd-sec-lbl">Next Steps</div>
+        <div class="pd-sec-title">A clear path forward.</div>
+        <div class="pd-step"><div class="pd-step-num">1</div><div><div class="pd-step-txt"><strong>30-minute review call</strong> with ${intake.contact} to walk through findings and confirm the priority order of remediation items.</div><button class="pd-step-btn" onclick="toast('Schedule link copied')">Schedule call</button></div></div>
+        <div class="pd-step"><div class="pd-step-num">2</div><div><div class="pd-step-txt"><strong>Engagement letter signed</strong> — establishes the named fiduciary relationship and triggers the 60-day remediation process.</div><button class="pd-step-btn" onclick="toast('Engagement letter sent')">Send engagement letter</button></div></div>
+        <div class="pd-step"><div class="pd-step-num">3</div><div><div class="pd-step-txt"><strong>Onboarding committee meeting</strong> — IPS review or drafting, compliance calendar setup, and verification of all probable gaps with documentation on file.</div></div></div>
+        <div class="pd-step"><div class="pd-step-num">4</div><div><div class="pd-step-txt"><strong>First quarterly report delivered</strong> within 60 days — gap closure status, fund performance, fee benchmarking, and participant outcomes.</div></div></div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-2);font-size:13px;color:var(--ink-4);line-height:1.6;">Contact <strong style="color:var(--ink-2);">Robert Delgado, CFA</strong> at <strong style="color:var(--ink-2);">800.967.3709</strong> or <strong style="color:var(--ink-2);">compliance@fhtretirement.com</strong>. First Hill Trust · Retirement Services · Confidential — prepared for ${intake.contact} at ${intake.co} only.</div>
+      </div>
+    </div>`;
+}
+
+function switchView(v){
+  ['summary','gaps','proposal','saved'].forEach(n=>{
+    document.getElementById('view-'+n).style.display=n===v?'block':'none';
+    document.getElementById('vt-'+n).classList.toggle('active',n===v);
+  });
+  if(v==='saved') renderHistory();
+  window.scrollTo(0,0);
+}
+
+function resetIntake(){
+  document.getElementById('results-wrap').style.display='none';
+  document.getElementById('bottom-bar').style.display='none';
+  document.getElementById('intake-wrap').style.display='block';
+  window.scrollTo(0,0);
+}
+
+// History stored in memory for this session
+const analysisHistory = [
+  {co:'Bay City Construction',type:'401(k)',contact:'Tom Garza',date:'March 14, 2025',score:42,gaps:9,status:'High Risk',confirmed:7},
+  {co:'Valley Medical Group',type:'403(b)',contact:'Marcus Reid',date:'February 28, 2025',score:61,gaps:6,status:'Medium Risk',confirmed:4},
+  {co:'Pacific Rim Logistics',type:'401(k)',contact:'Sarah Yuen',date:'January 19, 2025',score:78,gaps:3,status:'Low Risk',confirmed:2},
+  {co:'Sunrise Unified School District',type:'403(b)',contact:'Patricia Wells',date:'December 3, 2024',score:38,gaps:11,status:'High Risk',confirmed:9},
+];
+
+function renderHistory(){
+  const tbody=document.getElementById('history-tbody');
+  const empty=document.getElementById('history-empty');
+  if(!tbody) return;
+  // Add current analysis if completed
+  const all = [...analysisHistory];
+  if(intake.co && intake.co!=='Unknown Company'){
+    const sc=calcScores(gaps);
+    const confirmed=gaps.filter(g=>g.confirmed).length;
+    const rL=sc.overall>=75?'Low Risk':sc.overall>=55?'Medium Risk':'High Risk';
+    all.unshift({co:intake.co,type:intake.type,contact:intake.contact,date:new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}),score:sc.overall,gaps:gaps.length,status:rL,confirmed});
+  }
+  if(!all.length){empty.style.display='block';tbody.innerHTML='';return;}
+  empty.style.display='none';
+  const statusColor = s => s==='High Risk'?'var(--red)':s==='Medium Risk'?'var(--amber)':'var(--green)';
+  const statusBg = s => s==='High Risk'?'var(--red-lt)':s==='Medium Risk'?'var(--amber-lt)':'var(--green-lt)';
+  tbody.innerHTML = all.map((r,i)=>`<tr style="border-bottom:1px solid var(--border-2);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''" onclick="toast('Loading ${r.co} analysis...')">
+    <td style="padding:12px 18px;font-weight:600;color:var(--ink-2);">${r.co}</td>
+    <td style="padding:12px 14px;color:var(--ink-3);">${r.type}</td>
+    <td style="padding:12px 14px;color:var(--ink-3);">${r.contact}</td>
+    <td style="padding:12px 14px;color:var(--ink-4);white-space:nowrap;">${r.date}</td>
+    <td style="padding:12px 14px;text-align:center;">
+      <span style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:${statusColor(r.status)};">${r.score}</span>
+      <span style="font-size:11px;color:var(--ink-4);">/100</span>
+    </td>
+    <td style="padding:12px 14px;text-align:center;font-size:13px;color:var(--ink-2);font-weight:500;">${r.gaps}</td>
+    <td style="padding:12px 14px;"><span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:3px;background:${statusBg(r.status)};color:${statusColor(r.status)};">${r.status}</span></td>
+    <td style="padding:12px 14px;text-align:right;">
+      <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();toast('Opening PDF...')" style="font-size:11px;padding:4px 10px;">Open PDF</button>
+    </td>
+  </tr>`).join('');
+}
+
+function savePDF(){
+  // Save to history then print
+  if(intake.co && intake.co!=='Unknown Company'){
+    toast('Analysis saved to history — opening PDF');
+  } else {
+    toast('Opening print dialog — select "Save as PDF"');
+  }
+  setTimeout(()=>window.print(),500);
+}
+function copyProposal(){
+  const text=[...document.querySelectorAll('.pd-text,.pd-gap-action,.pd-step-txt,.pd-scope-text')].map(e=>e.textContent).join('\n\n');
+  navigator.clipboard.writeText(text).then(()=>toast('Proposal text copied to clipboard'));
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',2200);
+}
+</script>
+</body>
+</html>

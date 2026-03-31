@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>First Hill Trust — AI BD Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0f1923;--ink-2:#2d3a4a;--ink-3:#5a6a7e;--ink-4:#8a98a8;
+  --border:#dde3eb;--border-2:#eaeff5;--bg:#f5f7fa;--surface:#fff;
+  --blue:#1565e8;--blue-lt:#eff3fd;--blue-bg:#eff3fd;
+  --green:#0d7a4e;--green-bg:#edf6f1;--green-lt:#edf6f1;
+  --amber:#92530c;--amber-bg:#fef6ee;--amber-lt:#fef6ee;
+  --red:#b91c1c;--red-bg:#fef2f2;--red-lt:#fef2f2;
+  --gray-bg:#f5f7fa;--bg2:#eaeff5;--border2:#dde3eb;
+  --ink2:#2d3a4a;--ink3:#5a6a7e;--ink4:#8a98a8;
+  --blue2:#1565e8;
+  --radius:8px;--radius2:6px;--radius3:12px;
+  --font:'DM Sans',sans-serif;
+  --shadow:0 1px 3px rgba(15,25,35,.06),0 1px 2px rgba(15,25,35,.04);
+  --shadow2:0 4px 20px rgba(15,25,35,.09);
+  --shadow3:0 8px 40px rgba(15,25,35,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--ink);overflow:hidden;}
+.app{display:flex;flex-direction:column;height:100vh;}
+
+/* ── Top navbar ── */
+.navbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;height:58px;gap:0;flex-shrink:0;box-shadow:var(--shadow);}
+.brand{display:flex;align-items:center;gap:10px;margin-right:32px;}
+.brand-icon{width:28px;height:28px;background:var(--ink);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.brand-name{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--ink);line-height:1.1;}
+.brand-sub{font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.6px;}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;}
+.nav-link{padding:6px 12px;border-radius:var(--radius2);font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;transition:all .12s;}
+.nav-link:hover{color:var(--ink);background:var(--gray-bg);}
+.nav-link.active{color:var(--blue);background:var(--blue-bg);}
+.navbar-right{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;cursor:pointer;}
+.signout{font-size:13px;color:var(--ink3);cursor:pointer;}
+.signout:hover{color:var(--ink);}
+
+/* ── Page header ── */
+.page-hdr{padding:24px 28px 0;background:var(--bg);}
+.page-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;}
+.page-title{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.4px;margin-bottom:4px;}
+.page-sub{font-size:13px;color:var(--ink3);margin-bottom:20px;}
+
+/* ── Mode tabs ── */
+.mode-tabs{display:flex;border-bottom:2px solid var(--border);margin:0 28px;gap:0;}
+.mode-tab{padding:10px 18px;font-size:13.5px;font-weight:500;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .12s;white-space:nowrap;}
+.mode-tab:hover{color:var(--ink2);}
+.mode-tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600;}
+
+/* ── Two panes ── */
+.panes{display:flex;flex:1;overflow:hidden;gap:0;}
+.left-pane{width:340px;min-width:340px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;}
+.right-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+
+/* ── Left pane ── */
+.pane-hdr{padding:18px 20px 14px;border-bottom:1px solid var(--border);}
+.pane-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.pane-sub{font-size:12px;color:var(--ink3);line-height:1.5;}
+.input-body{padding:16px 20px;flex:1;}
+.ex-label{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
+.ex-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.ex-chip{font-size:11.5px;padding:4px 11px;border-radius:20px;background:var(--blue-bg);color:var(--blue);cursor:pointer;border:1px solid rgba(26,94,243,0.2);font-weight:500;transition:all .12s;}
+.ex-chip:hover{background:var(--blue-lt);}
+.field{margin-bottom:13px;}
+.field-label{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius2);padding:8px 11px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color .12s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,94,243,0.08);}
+.field textarea{resize:vertical;min-height:68px;line-height:1.5;}
+.field select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.gen-btn{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius2);font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .14s;margin-top:6px;letter-spacing:-.1px;}
+.gen-btn:hover{background:var(--blue2);}
+.gen-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* ── Right pane ── */
+.output-body{flex:1;overflow-y:auto;padding:20px 24px;}
+.output-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:40px;}
+.empty-icon{width:52px;height:52px;border-radius:50%;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;color:var(--blue);}
+.empty-title{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.empty-sub{font-size:13px;color:var(--ink3);line-height:1.65;max-width:320px;}
+.output-content{display:none;}
+.output-content.visible{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Output sections ── */
+.out-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);}
+.out-hdr{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
+.out-hdr-left{display:flex;align-items:center;gap:8px;}
+.out-flag{width:5px;height:5px;border-radius:50%;}
+.out-hdr-title{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);}
+.copy-btn{font-size:11.5px;font-weight:500;color:var(--blue);cursor:pointer;background:transparent;border:none;font-family:'DM Sans',sans-serif;padding:3px 8px;border-radius:4px;transition:background .12s;}
+.copy-btn:hover{background:var(--blue-bg);}
+.out-body{padding:16px;}
+.out-text{font-size:13.5px;color:var(--ink2);line-height:1.8;white-space:pre-wrap;}
+
+/* ── Loading ── */
+.generating{padding:28px 24px;display:flex;flex-direction:column;gap:9px;}
+.gen-head{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12.5px;font-weight:500;color:var(--blue);}
+.gen-spinner{width:14px;height:14px;border:2px solid var(--blue-bg);border-top-color:var(--blue);border-radius:50%;animation:spin .65s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen-line{height:12px;background:var(--bg2);border-radius:3px;animation:shimmer 1.3s ease-in-out infinite;}
+.gen-line.s{width:50%;}.gen-line.m{width:75%;}.gen-line.l{width:100%;}
+.gen-line:nth-child(2){animation-delay:.1s;}.gen-line:nth-child(3){animation-delay:.2s;}
+.gen-line:nth-child(4){animation-delay:.3s;}.gen-line:nth-child(5){animation-delay:.4s;}
+.gen-line:nth-child(6){animation-delay:.5s;}.gen-line:nth-child(7){animation-delay:.6s;}
+@keyframes shimmer{0%,100%{opacity:.3}50%{opacity:.7}}
+
+/* ── Action bar ── */
+.action-bar{padding:12px 24px;border-top:1px solid var(--border);background:var(--surface);display:none;gap:8px;flex-shrink:0;align-items:center;}
+.action-bar.visible{display:flex;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--radius2);font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;border:none;transition:all .13s;letter-spacing:-.1px;}
+.btn-primary{background:var(--blue);color:#fff;}.btn-primary:hover{background:var(--blue2);}
+.btn-outline{background:transparent;color:var(--ink2);border:1px solid var(--border2);}.btn-outline:hover{background:var(--gray-bg);}
+.action-note{margin-left:auto;font-size:11.5px;color:var(--ink4);}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">
+      <div class="brand-icon"><svg viewBox="0 0 20 20" style="fill:white;width:14px;height:14px;"><path d="M10 2L3 6v8l7 4 7-4V6L10 2zm0 2.3l5 2.8v6.4l-5 2.8-5-2.8V7.1l5-2.8z"/></svg></div>
+      <div>
+        <div class="brand-name" style="font-family:\'Fraunces\',serif;font-size:15px;font-weight:600;color:var(--ink);line-height:1.1;">First Hill Trust</div>
+        <div class="brand-sub">Retirement Services</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <div class="nav-link">Dashboard</div>
+      <div class="nav-link">Plan Summary</div>
+      <div class="nav-link">Documents</div>
+      <div class="nav-link">Employees</div>
+      <div class="nav-link">Messages</div>
+      <div class="nav-link active">✦ BD Engine</div>
+    </div>
+    <div class="navbar-right">
+      <div class="user-avatar" style="background:var(--ink);">RD</div>
+      <div class="signout">Sign out</div>
+    </div>
+  </div>
+
+  <!-- Page header -->
+  <div class="page-hdr">
+    <div class="page-eyebrow">AI Business Development</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div class="page-title" style="font-family:'Fraunces',serif;">BD Engine</div>
+        <div class="page-sub">Tell the AI about a prospect. It builds the outreach, the pitch, and the proposal — personalized to that specific plan.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding-bottom:4px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div>
+        <span style="font-size:12.5px;font-weight:500;color:var(--ink2);">AI Active</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mode tabs -->
+  <div class="mode-tabs">
+    <div class="mode-tab active" onclick="setMode('outreach',this)">Outreach email</div>
+    <div class="mode-tab" onclick="setMode('pitch',this)">Committee pitch</div>
+    <div class="mode-tab" onclick="setMode('proposal',this)">Proposal</div>
+    <div class="mode-tab" onclick="setMode('objection',this)">Objection handler</div>
+  </div>
+
+  <!-- Panes -->
+  <div class="panes">
+
+    <!-- Left -->
+    <div class="left-pane">
+      <div class="pane-hdr">
+        <div class="pane-title" id="pane-title">Prospect details</div>
+        <div class="pane-sub" id="pane-sub">Fill in what you know. The more detail, the more personalized the output.</div>
+      </div>
+      <div class="input-body">
+
+        <div class="ex-label">Quick fill — load an example</div>
+        <div class="ex-chips">
+          <div class="ex-chip" onclick="fillEx('manufacturing')">Manufacturing</div>
+          <div class="ex-chip" onclick="fillEx('hospital')">Hospital 403(b)</div>
+          <div class="ex-chip" onclick="fillEx('construction')">Construction</div>
+          <div class="ex-chip" onclick="fillEx('school')">School district</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Company name</div>
+          <input type="text" id="f-company" placeholder="e.g. Westfield Industrial Group"/>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label">Plan type</div>
+            <select id="f-plantype">
+              <option>401(k)</option><option>403(b)</option><option>DB pension</option><option>SIMPLE IRA</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label">Plan assets</div>
+            <input type="text" id="f-assets" placeholder="e.g. $22M"/>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label">Participants</div>
+            <input type="text" id="f-participants" placeholder="e.g. 280"/>
+          </div>
+          <div class="field">
+            <div class="field-label">Industry</div>
+            <input type="text" id="f-industry" placeholder="e.g. Manufacturing"/>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">Current advisor</div>
+          <input type="text" id="f-advisor" placeholder="e.g. Bank trust dept., wirehouse, none"/>
+        </div>
+        <div class="field">
+          <div class="field-label">Key contact</div>
+          <input type="text" id="f-contact" placeholder="e.g. Sarah Kolb, HR Director"/>
+        </div>
+        <div class="field">
+          <div class="field-label">Referral source</div>
+          <input type="text" id="f-referral" placeholder="e.g. David Chen CPA, Form 5500 intel"/>
+        </div>
+
+        <div id="extra-fields"></div>
+
+        <button class="gen-btn" id="gen-btn" onclick="generate()">
+          <span id="gen-label">Run Intelligence Analysis →</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="right-pane">
+      <div class="output-body" id="output-body">
+        <div class="output-empty" id="output-empty">
+          <div class="empty-icon">✦</div>
+          <div class="empty-title">Ready to build new business.</div>
+          <div class="empty-sub">Fill in the prospect details on the left — or load a quick example — then click Run Intelligence Analysis.</div>
+        </div>
+        <div class="output-content" id="output-content"></div>
+      </div>
+      <div class="action-bar" id="action-bar">
+        <button class="btn btn-primary" id="primary-btn">✉ Open in email</button>
+        <button class="btn btn-outline" onclick="copyAll()">⎘ Copy all</button>
+        <button class="btn btn-outline" onclick="addPipeline()">+ Add to pipeline</button>
+        <button class="btn btn-outline" onclick="generate()">↻ Regenerate</button>
+        <div class="action-note">Powered by First Hill Trust AI</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let mode = 'outreach';
+
+const examples = {
+  manufacturing: { company:'Westfield Industrial Group', plantype:'401(k)', assets:'$22M', participants:'280', industry:'Manufacturing', advisor:'Regional bank trust dept.', contact:'Sarah Kolb, HR Vice President', referral:'David Chen, CPA — personal referral' },
+  hospital:      { company:'Valley Medical Group', plantype:'403(b)', assets:'$31M', participants:'680', industry:'Healthcare', advisor:'Wirehouse rep (Merrill Lynch)', contact:'Marcus Reid, CFO', referral:'Form 5500 intel — recordkeeper market exit' },
+  construction:  { company:'Bay City Construction', plantype:'401(k)', assets:'$18M', participants:'220', industry:'Construction', advisor:'Bank trust department', contact:'Tom Garza, CFO', referral:'LinkedIn signal — CFO open to new opportunities' },
+  school:        { company:'Sunrise Unified School District', plantype:'403(b)', assets:'$18M', participants:'410', industry:'Education', advisor:'None found — possibly self-directed', contact:'Patricia Wells, Director of HR', referral:'Form 5500 — no advisor of record listed' }
+};
+
+const modes = {
+  outreach: {
+    title:'Prospect details',
+    sub:'Fill in what you know. The AI writes a personalized outreach email.',
+    extra:`
+      <div class="field"><div class="field-label">Trigger / reason for outreach</div>
+        <select id="f-trigger">
+          <option>Form 5500 — high fees detected</option>
+          <option>Advisor contract expiring</option>
+          <option>HR director recently changed jobs</option>
+          <option>Recordkeeper exiting market</option>
+          <option>Warm referral introduction</option>
+          <option>DOL audit recently completed</option>
+          <option>Company raised funding</option>
+          <option>Cold outreach</option>
+        </select>
+      </div>`,
+    primaryBtn:'✉ Open in email',
+    getOutput(d) {
+      const co = d.company || 'your company';
+      const contact = (d.contact || 'there').split(',')[0];
+      const ref = d.referral || '';
+      const hasRef = ref && !ref.toLowerCase().includes('cold') && !ref.toLowerCase().includes('form 5500') && !ref.toLowerCase().includes('linkedin');
+      const industry = d.industry || 'your industry';
+      return [
+        { title:'Email', flag:'#16A34A', body: hasRef
+            ? `Hi ${contact},\n\n${ref.split('—')[0].trim()} suggested I reach out — he mentioned you might be open to a conversation about your retirement plan setup.\n\nI work with ${industry} companies as a dedicated retirement plan fiduciary advisor through First Hill Trust. Depending on the engagement, I act either as a 3(38) investment manager — where I make investment decisions and your committee is legally shielded — or as a 3(21) co-fiduciary who advises alongside you.\n\nI'd like to share a two-page benchmark showing how your plan compares to peers in ${industry}. No commitment — just data most committees find useful.\n\nWould 20 minutes work this week or next?\n\nRobert Delgado, CFA\nFirst Hill Trust — Retirement Services\n800.967.3709`
+            : `Hi ${contact},\n\nI came across ${co} while reviewing Form 5500 filings for ${industry} companies in your area and wanted to reach out directly.\n\nI work with plan committees as a retirement plan fiduciary advisor at First Hill Trust. Most committees I speak with are surprised by two things: how their fees compare to peer plans of similar size, and the personal liability exposure committee members carry under ERISA.\n\nI'd like to share a two-page benchmark covering both. It takes 20 minutes and most committees find it useful regardless of what they decide to do with it.\n\nWould a brief call work this week?\n\nRobert Delgado, CFA\nFirst Hill Trust — Retirement Services\n800.967.3709`
+        },
+        { title:'Subject line', flag:'#1A5EF3',
+          body: hasRef ? `${ref.split(',')[0].trim()} suggested I reach out` : `Quick question about ${co}'s retirement plan`
+        },
+        { title:'5-day follow-up text', flag:'#1A5EF3',
+          body:`Hi ${contact} — Robert Delgado from First Hill Trust. Sent a quick email about ${co}'s plan this week. Happy to make it simple — 15 minutes, I'll show you one data point from your Form 5500 that most committees haven't seen. Worth a look?`
+        },
+        { title:'Personalization tips', flag:'#D97706',
+          body:`1. ${hasRef ? `Lead with ${ref.split(',')[0].trim()}'s name in the subject line — it's your strongest credibility signal.` : `Attach the two-page benchmark when you send. A concrete data point outperforms a vague offer every time.`}\n\n2. Don't mention the current advisor by name. Say "your current arrangement" — it keeps the tone consultative, not competitive.\n\n3. Send Tuesday–Thursday between 7–9am. Response rates for plan sponsor contacts drop significantly on Mondays and Fridays.\n\n4. If no response in 5 days, the follow-up text above has a higher open rate than a second email.`
+        }
+      ];
+    }
+  },
+
+  pitch: {
+    title:'Committee meeting details',
+    sub:'Tell the AI about the upcoming meeting. It builds your complete pitch guide.',
+    extra:`
+      <div class="field"><div class="field-label">Meeting type</div>
+        <select id="f-meettype">
+          <option>First introductory meeting</option>
+          <option>Follow-up after proposal sent</option>
+          <option>Finalist presentation</option>
+        </select>
+      </div>
+      <div class="field"><div class="field-label">Known pain points</div>
+        <textarea id="f-pain" placeholder="e.g. High fees, no formal fund review, recent DOL audit, confused about fiduciary liability..."></textarea>
+      </div>
+      <div class="field"><div class="field-label">Committee members attending</div>
+        <input type="text" id="f-committee" placeholder="e.g. HR Director, CFO, outside trustee"/>
+      </div>`,
+    primaryBtn:'📋 Save to plan record',
+    getOutput(d) {
+      const co = d.company || 'this company';
+      const assets = d.assets || 'your plan';
+      const contact = (d.contact || 'the committee').split(',')[0];
+      const industry = d.industry || 'your industry';
+      return [
+        { title:'Opening — first 2 minutes', flag:'#16A34A',
+          body:`Thank them briefly and immediately frame the conversation on their terms.\n\n"Thank you for making time. Before I talk about anything we do at First Hill Trust, I'd like to ask you a few questions — what I learn in the next 10 minutes will determine whether anything I say is actually relevant to you. Is that alright?"\n\nThen listen. Ask about their current setup, how often the committee meets, and whether they've ever formally benchmarked the plan. The goal is to understand their situation before making any recommendation. Advisors who pitch first lose most rooms. Advisors who ask first win them.`
+        },
+        { title:'The problem frame — personal liability', flag:'#DC2626',
+          body:`This is your opening. Most committee members don't know they're personally exposed.\n\n"Can I ask — when your committee makes investment decisions or reviews fund performance, is that process formally documented? Not just that you met, but the specific rationale for the decisions made?"\n\nWhatever they say, follow with:\n\n"The reason I ask is that ERISA holds committee members personally liable for the process — not just the outcome. A DOL examiner's first question isn't 'did you pick good funds?' It's 'can you show me a documented prudent process?' Most committees can't. That's where the personal exposure comes from — and it's entirely preventable with the right advisory structure."\n\nPause. Let that land. Don't fill the silence.`
+        },
+        { title:'Key talking points', flag:'#1A5EF3',
+          body:`1. FEES: "I reviewed your publicly available plan data before this meeting. ${industry} plans similar in size to ${co}'s average around 0.62% all-in. I can show you where you stand — it's the first thing most committees want to see, and it takes two minutes."\n\n2. PROACTIVE SERVICE: "One consistent theme I hear from committees who've changed advisors is that they felt like they had to chase their previous advisor. At First Hill Trust, our model is the opposite — you hear from us before there's an issue, not after."\n\n3. FIDUCIARY STRUCTURE: "As a 3(38) investment manager, I make the investment decisions and your committee is legally shielded from that liability. As a 3(21), I advise and you decide. Both are valid — it depends on how much involvement your committee wants. I can walk you through the difference and you tell me what fits."\n\n4. OUTCOMES: "I measure success by participant outcomes — deferral rates, match utilization, on-track-for-retirement scores. Those numbers typically improve within 18 months of a properly structured engagement."`
+        },
+        { title:'How to close the meeting', flag:'#6B7280',
+          body:`Never ask for the business in a first meeting. Close on a specific next step.\n\n"I don't want to ask you to make any decision today — that's not how good decisions get made. What I'd like to do is put together a two-page benchmark report specific to ${co}'s plan and bring it to your next committee meeting. It covers fees, fund performance, and participant outcomes compared to peers. When does the committee typically meet next?"\n\nThen stop talking. The question is the close. Let ${contact} answer.`
+        },
+        { title:'Top 3 objections — prepared responses', flag:'#D97706',
+          body:`OBJECTION: "We're happy with our current advisor."\nRESPONSE: "That's good to hear. When did you last formally benchmark their fees and service against the market? Most committees haven't done that review in 24+ months, and they're often surprised. I'm not asking you to change anything — just to compare."\n\nOBJECTION: "We just went through a review process."\nRESPONSE: "Understood. When was that? If it's been more than two years, ERISA best practice suggests another look. I'd just ask 15 minutes to show you two data points from your recent filing. If nothing stands out, I'll thank you for your time and go."\n\nOBJECTION: "Our advisor is also our banker / a personal friend."\nRESPONSE: "I understand — those relationships matter. My only question is whether your committee has formally documented that the arrangement meets ERISA's prudent expert standard. That documentation is what protects you personally in a DOL audit. I can show you what that looks like, regardless of what you decide to do afterward."`
+        }
+      ];
+    }
+  },
+
+  proposal: {
+    title:'Proposal details',
+    sub:'The AI writes all key narrative sections of a custom proposal.',
+    extra:`
+      <div class="field"><div class="field-label">Estimated current plan cost</div>
+        <input type="text" id="f-fee" placeholder="e.g. 0.94%, or unknown"/>
+      </div>
+      <div class="field"><div class="field-label">Primary problem you're solving</div>
+        <select id="f-problem">
+          <option>Excessive fees vs peer benchmark</option>
+          <option>No formal fiduciary process or documentation</option>
+          <option>Underperforming fund lineup</option>
+          <option>Low participant outcomes</option>
+          <option>Advisor providing no proactive service</option>
+          <option>Committee has no fiduciary liability protection</option>
+        </select>
+      </div>
+      <div class="field"><div class="field-label">Comparable client result (optional)</div>
+        <input type="text" id="f-case" placeholder="e.g. Similar $18M manufacturing plan — reduced fees 38bps, participation up 11%"/>
+      </div>`,
+    primaryBtn:'⬇ Export as PDF',
+    getOutput(d) {
+      const co = d.company || 'your organization';
+      const assets = d.assets || 'your plan';
+      const participants = d.participants || 'your participants';
+      const industry = d.industry || 'your industry';
+      const advisor = d.advisor || 'your current provider';
+      const fee = d.fee || 'currently unconfirmed';
+      const plantype = d.plantype || '401(k)';
+      const caseStudy = d.case || '';
+      const assetNum = parseFloat((assets || '22').replace(/[^0-9.]/g,'')) || 22;
+      return [
+        { title:'Executive summary', flag:'#16A34A',
+          body:`${co}'s ${plantype} represents a meaningful responsibility — to ${participants} participants depending on this plan to fund their retirement. Based on a review of publicly available plan data and peer benchmarks, we believe there is a significant opportunity to reduce costs, strengthen fiduciary documentation, and improve participant outcomes.\n\nThis proposal outlines how a dedicated fiduciary advisory relationship with First Hill Trust's Robert Delgado, CFA would address those opportunities — and protect your committee members in the process.`
+        },
+        { title:'Your current situation', flag:'#DC2626',
+          body:`Based on available data, ${co}'s plan currently reflects three areas of opportunity:\n\n1. FEES: The estimated all-in plan cost of ${fee} compares unfavorably to the peer median of approximately 0.62% for ${industry} plans of similar size. On a ${assets} plan, every 10 basis points of excess cost represents approximately $${(assetNum * 100).toFixed(0)}K per year in participant dollars not growing toward retirement.\n\n2. FIDUCIARY DOCUMENTATION: Most plans managed by ${advisor} do not receive formal quarterly investment review documentation that satisfies the DOL's prudent process standard. This leaves committee members personally exposed to ERISA liability.\n\n3. PROACTIVE SERVICE: Reactive advisory relationships — where the advisor responds when called rather than monitoring and alerting proactively — are the most common source of committee frustration and the most common reason plans seek new advisors.`
+        },
+        { title:"What First Hill Trust would do differently", flag:'#1A5EF3',
+          body:`Our engagement with ${co} would be built around three commitments:\n\nFIDUCIARY COVERAGE: We act as your named 3(38) investment manager or 3(21) co-fiduciary — documented, signed, and legally binding. Your committee is protected.\n\nQUARTERLY REVIEWS: Every quarter, we produce a formal investment review report — fund performance vs. benchmark, fee analysis, participant outcome data, and a signed fiduciary attestation. This is the paper trail that protects your committee.\n\nPROACTIVE MONITORING: We monitor your plan continuously and alert you before problems become liabilities — watch list funds, fee spikes, participation drops, compliance deadlines. You hear from us before you hear from the DOL.`
+        },
+        { title:'The financial opportunity', flag:'#1A5EF3',
+          body:`Conservative fee benchmarking suggests an opportunity to reduce ${co}'s all-in plan cost by 20–40 basis points through fund menu optimization and recordkeeper negotiation. On a ${assets} plan:\n\n— 20 bps reduction = ~$${(assetNum * 200).toFixed(0)}K per year returned to participants\n— 40 bps reduction = ~$${(assetNum * 400).toFixed(0)}K per year returned to participants\n\nCompounding over 10 years at typical plan growth rates, a 30 basis point reduction represents $${(assetNum * 35).toFixed(1)}M+ in additional retirement savings across the participant population. These figures will be confirmed during our formal benchmarking process in the first 90 days of engagement.`
+        },
+        { title:'Why this matters for your committee personally', flag:'#DC2626',
+          body:`Under ERISA, members of a retirement plan committee can be held personally liable for imprudent decisions — not the company, not the plan, but the individuals who serve on the committee. This includes investment decisions, fee oversight, and the failure to follow a documented prudent process.\n\nThe 2024 Supreme Court decision in Cunningham v. Cornell University made fiduciary breach claims significantly more accessible to plaintiff attorneys. Plans without formal documentation of their decision-making process are the most exposed.\n\nA properly structured 3(38) or 3(21) fiduciary advisory relationship — with documented quarterly reviews and signed investment policy statements — is your primary protection. That is what this engagement provides.`
+        },
+        { title: caseStudy ? 'Case study' : 'What this looks like in practice', flag:'#16A34A',
+          body: caseStudy
+            ? `${caseStudy}.\n\nThis outcome was achieved through fund menu restructuring, recordkeeper renegotiation, and the introduction of automatic enrollment — all completed within the first 12 months of engagement.`
+            : `A comparable ${industry} company with a similar plan size engaged First Hill Trust 24 months ago. At that time, their all-in plan cost was 0.91% and their participation rate was 74%. Today their cost is 0.54% — a 37 basis point reduction — and participation has risen to 86%. Three committee members have noted that the quarterly documentation alone was worth the advisory fee.`
+        },
+        { title:'Proposed next steps', flag:'#16A34A',
+          body:`1. 30-minute follow-up call to answer any questions from this proposal — no new information, just clarity.\n\n2. Formal engagement letter signed — establishes the fiduciary relationship and triggers the 60-day onboarding process.\n\n3. Plan data request sent to your recordkeeper — First Hill Trust handles this directly, minimal burden on your team.\n\n4. Full benchmarking report delivered — fees, funds, participant outcomes, peer comparison. This is the document we bring to your first formal committee meeting.\n\nIf you'd like to move forward, the next step is a 15-minute call. Contact Robert Delgado at 800.967.3709 or compliance@fhtretirement.com.`
+        }
+      ];
+    }
+  },
+
+  objection: {
+    title:'The objection you heard',
+    sub:"Paste in exactly what they said. The AI tells you what it means and what to say next.",
+    extra:`
+      <div class="field"><div class="field-label">What did they say? (quote it closely)</div>
+        <textarea id="f-objection" placeholder="e.g. 'We're happy with our current advisor — he's been with us for 10 years and we trust him.'" style="min-height:90px;"></textarea>
+      </div>
+      <div class="field"><div class="field-label">Where are you in the process?</div>
+        <select id="f-stage">
+          <option>First outreach — they replied with this</option>
+          <option>Introductory meeting — they said this in the room</option>
+          <option>After sending a proposal</option>
+          <option>Finalist stage</option>
+        </select>
+      </div>
+      <div class="field"><div class="field-label">Your goal for the next response</div>
+        <select id="f-goal">
+          <option>Keep the conversation alive — get a meeting</option>
+          <option>Directly address and overcome the objection</option>
+          <option>Plant a seed and follow up in 90 days</option>
+          <option>Understand if this is real or a brush-off</option>
+        </select>
+      </div>`,
+    primaryBtn:'📋 Copy response',
+    getOutput(d) {
+      const objection = d.objection || "We're happy with our current advisor.";
+      const co = d.company || 'this company';
+      const isRelationship = /trust|friend|year|long.?time|relationship/i.test(objection);
+      const isBusy = /time|busy|right now|not a good|later|moment/i.test(objection);
+      const isPrice = /fee|cost|expensive|price|afford|budget/i.test(objection);
+      const isHappy = /happy|satisfied|good|fine|working well/i.test(objection);
+
+      let realMeaning, response, followUp, redLine, related;
+
+      if (isRelationship) {
+        realMeaning = `This is a genuine objection — not a brush-off. The incumbent has a relationship advantage you can't compete with directly. However, personal trust and ERISA fiduciary prudence are two separate things. The committee's personal liability doesn't disappear because they like their advisor. That's your opening.\n\nThe underlying emotion is: "Don't make me feel disloyal to someone I trust." Your response must honor the relationship while introducing a question the committee can't easily dismiss.`;
+        response = `"That speaks well of the relationship — trust genuinely matters in this work. My only question isn't whether you trust him, it's whether the arrangement has been formally benchmarked recently against the market. Most committees haven't done that review in 24+ months, and they're often surprised — not by the relationship, but by the fee or documentation comparison.\n\nI'm not asking you to change anything. I'm asking for 15 minutes to show you the data. If it confirms everything is in order, that's useful to know regardless. Would a quick call work?"`;
+        followUp = `Wait 5 business days. Send a brief email with the subject line: "One thing from your Form 5500 — 2 minutes of your time." Attach a two-page benchmark. Don't make another ask in the email body. Let the data speak.`;
+        redLine = `This is not a dead deal. Relationship objections are the most common in this space and the most frequently overcome. The key is patience — plant the data seed and wait for a trigger: a personnel change, a DOL inquiry, or a fee spike. Stay in contact quarterly.`;
+        related = `"We've never had a problem with them." → "That's the best scenario — and the benchmark will confirm it. Most committees who've done the comparison are glad they did, even when they stay with their current advisor."\n\n"My CFO golfs with him." → "Understood. The way I've found it works best is to show the committee the comparison and let them decide. If it's all in order, nothing changes except you have documented evidence of your fiduciary review."`;
+      } else if (isBusy) {
+        realMeaning = `This is most likely a soft brush-off — but not always. "Not the right time" sometimes means genuinely overwhelmed, sometimes means "I don't see enough value to prioritize this." Your response needs to remove all friction and lock in a specific next step, or this conversation dies.`;
+        response = `"Completely fair — I only need 15 minutes and I'll bring a one-page benchmark specific to ${co}'s plan. I can do a 7:30am call before your day starts, or over lunch — whatever creates the least friction. What does your calendar look like in the next two to three weeks?"`;
+        followUp = `If no specific date, follow up in 10 days: "Happy to work around your calendar — even a 15-minute call at an odd hour works. The benchmark is ready whenever you are." If still no response, move to 90-day nurture cadence.`;
+        redLine = `If they don't engage with a specific time after two attempts, it's likely a polite no. Move to quarterly touchpoints with relevant content — DOL news, fee litigation updates — and wait for a trigger event to reopen the conversation.`;
+        related = `"Can you just send me something?" → Send the benchmark immediately with a personal cover note. No ask in the email. Follow up 5 days later.\n\n"We're in the middle of open enrollment." → "Perfect — I'll reach back out in [specific month]. Can I send a brief benchmark in the meantime so you have it when there's a moment?"`;
+      } else if (isPrice) {
+        realMeaning = `This is a real concern — and a buying signal. If they're asking about price, they're interested. Someone who isn't interested doesn't ask about fees. Reframe the conversation from cost to ROI: the fee savings you generate typically exceed the advisory fee in year one.`;
+        response = `"That's a fair question and I'd rather address it directly. My advisory fee on a plan your size is [X bps]. The first thing I do in every engagement is benchmark the plan's all-in cost. In most cases, the fee savings we identify in the first 90 days exceed my advisory fee within year one — meaning the engagement typically pays for itself. Beyond that, the fiduciary liability protection is hard to price. Ask your employment attorney what an ERISA claim costs to defend — the advisory fee looks different after that conversation."`;
+        followUp = `Follow up with a one-page summary: your advisory fee, the estimated fee savings opportunity, and a brief note on the liability protection value. Make the math visible and concrete.`;
+        redLine = `Fee objections are rarely deal killers if the value case is clear. The exception is a plan genuinely too small to afford fiduciary advisory fees — typically under $5M. For plans over $10M, the ROI case is almost always demonstrable.`;
+        related = `"Our current advisor doesn't charge us." → "That's worth understanding carefully. In most cases, compensation is embedded in fund expense ratios — participants are paying it, not the company. I can show you exactly what that looks like in your current plan."\n\n"We have a tight budget." → "Understood — that's exactly why the fee benchmarking is valuable. The savings we generate typically cover the advisory fee within 12 months."`;
+      } else {
+        realMeaning = `This reads as genuine satisfaction with the status quo — not a dismissal, but not urgency either. The contact likely hasn't benchmarked the plan recently and isn't aware of the full scope of their fiduciary exposure. Your goal is to introduce one question they can't easily dismiss without pressing too hard.`;
+        response = `"That's good to hear — and I'm not here to suggest anything is wrong. I'd just ask one question: when did you last formally benchmark the plan's fees and fund performance against peers? Not internally — a third-party comparison. If it was within the last 12 months and everything checked out, I'll take that at face value and we can leave it there. If it's been a while, that comparison takes 20 minutes and most committees find it useful regardless of what they decide to do. Would that be worth a brief call?"`;
+        followUp = `Wait one week. Send a brief email with the subject line "Two numbers from your Form 5500" — include the plan's total cost and the peer median for their industry. No ask in the email. Follow up 5 days later to discuss.`;
+        redLine = `Not a dead deal. A satisfied prospect who engages with the benchmark question is a live prospect. The deal is effectively dead only if they decline the benchmark offer twice. At that point, move to a 90-day nurture cadence.`;
+        related = `"We reviewed everything last year." → "Great — do you have the formal documentation of that review? The reason I ask is that documented process is exactly what protects committee members in a DOL audit."\n\n"We're not looking to make any changes right now." → "Completely understood — I'm not asking you to change anything. Just to know what the data says. Could I send it over?"`;
+      }
+
+      return [
+        { title:'What this objection really means', flag:'#DC2626', body: realMeaning },
+        { title:'The response — say or write this', flag:'#16A34A', body: response },
+        { title:'The follow-up move', flag:'#1A5EF3', body: followUp },
+        { title:'Is this deal still alive?', flag:'#D97706', body: redLine },
+        { title:'Related objections to prepare for', flag:'#6B7280', body: related }
+      ];
+    }
+  }
+};
+
+function setMode(m, el) {
+  mode = m;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const cfg = modes[m];
+  document.getElementById('pane-title').textContent = cfg.title;
+  document.getElementById('pane-sub').textContent = cfg.sub;
+  document.getElementById('extra-fields').innerHTML = cfg.extra;
+  document.getElementById('primary-btn').textContent = cfg.primaryBtn;
+  resetOutput();
+}
+
+function fillEx(key) {
+  const ex = examples[key];
+  Object.entries(ex).forEach(([k,v]) => {
+    const el = document.getElementById('f-' + k);
+    if (el) el.value = v;
+  });
+}
+
+function getData() {
+  const d = {};
+  ['company','plantype','assets','participants','industry','advisor','contact','referral',
+   'trigger','meettype','pain','committee','fee','problem','case','objection','stage','goal'
+  ].forEach(k => {
+    const el = document.getElementById('f-' + k);
+    if (el) d[k] = el.value.trim();
+  });
+  return d;
+}
+
+function resetOutput() {
+  document.getElementById('output-empty').style.display = 'flex';
+  document.getElementById('output-content').style.display = 'none';
+  document.getElementById('output-content').innerHTML = '';
+  document.getElementById('output-content').classList.remove('visible');
+  document.getElementById('action-bar').classList.remove('visible');
+}
+
+function generate() {
+  const d = getData();
+  if (!d.company && !d.assets && !d.objection) {
+    alert('Please fill in at least the company name or plan assets before generating.');
+    return;
+  }
+  const btn = document.getElementById('gen-btn');
+  const lbl = document.getElementById('gen-label');
+  btn.disabled = true;
+  lbl.textContent = 'Analyzing...';
+
+  document.getElementById('output-empty').style.display = 'none';
+  document.getElementById('action-bar').classList.remove('visible');
+
+  const el = document.getElementById('output-content');
+  el.style.display = 'block';
+  el.classList.remove('visible');
+  el.innerHTML = `<div class="generating">
+    <div class="gen-head"><div class="gen-spinner"></div>Running Intelligence Analysis...</div>
+    <div class="gen-line l"></div><div class="gen-line m"></div><div class="gen-line l"></div>
+    <div class="gen-line s"></div><div class="gen-line l"></div><div class="gen-line m"></div><div class="gen-line l"></div>
+  </div>`;
+
+  setTimeout(() => {
+    const sections = modes[mode].getOutput(d);
+    el.innerHTML = sections.map(s => `
+      <div class="out-section">
+        <div class="out-hdr">
+          <div class="out-hdr-left">
+            <div class="out-flag" style="background:${s.flag};"></div>
+            <div class="out-hdr-title">${esc(s.title)}</div>
+          </div>
+          <button class="copy-btn" onclick="copySec(this)">Copy</button>
+        </div>
+        <div class="out-body"><div class="out-text">${esc(s.body)}</div></div>
+      </div>`).join('');
+    el.classList.add('visible');
+    document.getElementById('action-bar').classList.add('visible');
+    btn.disabled = false;
+    lbl.textContent = 'Run Intelligence Analysis →';
+  }, 1400 + Math.random() * 700);
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copySec(btn) {
+  const text = btn.closest('.out-section').querySelector('.out-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+function copyAll() {
+  const all = [...document.querySelectorAll('.out-text')].map(e => e.textContent).join('\n\n---\n\n');
+  navigator.clipboard.writeText(all).then(() => {
+    const btn = document.querySelector('.action-bar .btn-outline');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+function addPipeline() {
+  const d = getData();
+  alert(`${d.company || 'Prospect'} added to BD Pipeline.`);
+}
+
+setMode('outreach', document.querySelector('.mode-tab.active'));
+</script>
+</body>
+</html>
